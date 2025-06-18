@@ -39,8 +39,9 @@ fi
 
 if $use_compile; then
   echo "> Compiling selected sources..."
-  # Always compile steady-state (used in both cases)
+  # Always compile steady-state and frohlich
   g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/steady_state.cxx -o ../bin/sts -lgsl -lgslcblas -lm -larmadillo
+  g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/frohlich.cxx -o ../bin/fro -lgsl -lgslcblas -lm -larmadillo
   # Compile time-dependent module depending on plot mode
   if [ "$plot_mode" == "num" ]; then
     g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/num_time.cxx -o ../bin/num -lgsl -lgslcblas -lm -larmadillo
@@ -105,7 +106,6 @@ do
           print ""
           }
       }' $cmpcname > "../data/output/background.dat"
-  exit
   for (( i=0; i<=N; i++ ))
   do
     ome=$(echo "$omemi + $i * $dom" | bc -l)
