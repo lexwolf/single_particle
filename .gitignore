@@ -1,0 +1,14 @@
+# Ignore everything inside data/output and img and bin
+data/output/*
+img/*
+bin/*
+data/input/*.bak
+
+# But track the directories themselves
+!data/output/.gitkeep
+!img/.gitkeep
+!bin/.gitkeep
+
+# Ignore *.o and *.so files
+src/*.o
+
