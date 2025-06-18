@@ -73,7 +73,7 @@ int main(int argc, char** argv){
     eps1 = ns.metal(omeeV);
     eps2 = ns.active(omeeV,eps_b);
     alph = polarizability(eps1,eps2);
-    alfa<<real(alph)<<" "<<imag(alph)<<" "<<real(alph_num)<<" "<<imag(alph_num)<<endl;
+    alfa<<real(alph)<<" "<<imag(alph)<<" "<<real(alph_num)<<" "<<imag(alph_num)<<" "<<real(eps2)<<" "<<imag(eps2)<<endl<<endl;
     
   return 0;
   }

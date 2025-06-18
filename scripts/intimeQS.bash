@@ -93,7 +93,19 @@ do
   dig="${#N}"
   frm="%0${dig}d"
   dom=$(echo "($omema - $omemi)/$N" | bc -l)
-
+  # Execute steady-state
+  ../bin/sts
+  cmpcname="../data/output/compounds.dat"
+  # Create the background data
+  awk '{
+      if (NR > 7) { 
+          for (i = -1; i <= 1; i++) { 
+          print $1, i, ($5 < 0 ? -$5 : $5) 
+          } 
+          print ""
+          }
+      }' $cmpcname > "../data/output/background.dat"
+  exit
   for (( i=0; i<=N; i++ ))
   do
     ome=$(echo "$omemi + $i * $dom" | bc -l)
@@ -103,8 +115,6 @@ do
     elif [ "$plot_mode" == "anl" ]; then
     ../bin/anl $ome
     fi
-    # Always execute steady-state
-    ../bin/sts
     echo $ome > ../data/output/omega.dat
 
     # Select gnuplot script
