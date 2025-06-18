@@ -38,16 +38,16 @@ row=1 ; col=2
 tpump = at(file,row,col)
 # DONE
 
-# READING STATIONARY QUASI STATIC ALPHA (Re(alph_QS), Im(alph_QS)) FROM "../data/output/eV2cfc.dat"
-file="../data/output/eV2cfc.dat" ;
-row=2 ; col=1
+# READING STATIONARY QUASI STATIC ALPHA (Re(alph_QS), Im(alph_QS)) FROM "../data/output/alpha.dat"
+file="../data/output/alpha.dat" ;
+row=1 ; col=1
 reaQS = at(file,row,col)
-row=2 ; col=2
+row=1 ; col=2
 imaQS = at(file,row,col)
 # DONE
 
-stats "../data/output/stationary.dat" using 2 name "Y2"
-stats "../data/output/stationary.dat" using 3 name "Y3"
+stats "../data/output/stationary.dat" using 2 name "Y2" nooutput
+stats "../data/output/stationary.dat" using 3 name "Y3" nooutput
 
 # Calcola il valore massimo tra le due colonne
 ymax = (Y2_max > Y3_max) ? Y2_max : Y3_max
@@ -57,8 +57,10 @@ ymin = (Y2_min < Y3_min) ? Y2_min : Y3_min
 set term unknown
 if (ymax > 200) {
     set yrange [-200:200]
+    set y2range [-200:200]
     } else {
     set yrange [1.1*ymin:1.1*ymax]
+    set y2range [1.1*ymin:1.1*ymax]
     }
 
 set xrange [0:T];
@@ -78,11 +80,7 @@ set label 22 at graph 0.02, 0.08 "{/=24 (a)}";
 
 if (G!=0) { 
     set label 33 at first 0.22, graph 0.95 "{/=14 PUMP ON}";
-#     if (G<=Gth) { 
         set object 66 rect from first tpump, graph 0 to first T, graph 1  fc rgb "light-blue" fillstyle transparent solid;
-#         } else {
-#         set object rect from first 1., graph 0 to first T, graph 1  fc rgb "gray" fillstyle transparent solid;
-#         }
     }
 
 set xlabel "Time (ps)"
@@ -108,11 +106,11 @@ set rmargin 17
 
 set object 66 rect from graph 0, graph 0 to graph 1, graph 1
 set arrow 22 nohead from first omega, graph 0 to first omega, graph 1 lc rgb "blue" lw 2 front
-set arrow 23 nohead from graph 0, first reaQS to first omega, first reaQS lc 0 lw 2 dt 2
-set arrow 24 nohead from graph 0, first imaQS to first omega, first imaQS ls 7 lw 2 dt 2
+set arrow 23 nohead from graph 0, second reaQS to first omega, second reaQS lc 0 lw 2 dt 2 front
+set arrow 24 nohead from graph 0, second imaQS to first omega, second imaQS ls 7 lw 2 dt 2 front
 
-plot "../data/output/stationary.dat" u 1:2 w l ls 6 t "{/Symbol a}' ",\
-     "../data/output/stationary.dat" u 1:3 w l ls 7 t "{/Symbol a}''"; 
+plot "../data/output/stationary.dat" u 1:2 axes x1y2 w l ls 6 t "{/Symbol a}' ",\
+     "../data/output/stationary.dat" u 1:3 axes x1y2 w l ls 7 t "{/Symbol a}''"; 
 
 unset multiplot
 unset term

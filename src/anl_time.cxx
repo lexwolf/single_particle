@@ -33,8 +33,8 @@ g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/anl_time.cxx -o ../bin/an
 using namespace std;
 
 int main(int argc, char** argv){
-    double   omeeV, omemi, omema, E0, T, tpump;
-    complex<double> eps1, eps2, alph;
+    double   omeeV, omemi, omema, E0, T, tpump, eps_b;
+    complex<double> eps1, eps2, alph, alph_anl;
 
     char mtl[26], mdl[26], sol[26], active[26];
     if (argv[1]==0){
@@ -43,24 +43,37 @@ int main(int argc, char** argv){
         }
     omeeV=atof(argv[1]);
     
-    nanosphere ns;    
-    fstream nano, time;
-
-    nano.open("../data/input/nanosphere_eV.dat", ios::in);
-    time.open("../data/input/time.dat", ios::in);
-
+    nanosphere ns;
+    
+    ifstream nano("../data/input/nanosphere_eV.dat");
+    if (!nano) {
+        std::cerr << "Error: Cannot open input file" << std::endl;
+        return 1;
+    }
+    ifstream time("../data/input/time.dat");
+    if (!time) {
+        std::cerr << "Error: Cannot open time file" << std::endl;
+        return 1;
+    }
+    ofstream alfa("../data/output/alpha.dat");
+    if (!alfa) {
+        std::cerr << "Error: Cannot open output file" << std::endl;
+        return 1;
+    }
 
     nano>>ns.r1>>ns.Dome>>ns.ome_0>>ns.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
     time>>T>>tpump;    
     
     ns.init();
     ns.set_metal(mtl,mdl,1);
-    ns.set_host(sol);
+    eps_b=ns.set_host(sol);
     ns.set_active(active);
     
-    ns.steady_state(mdl, mtl, sol, omemi, omema);
-    alph=ns.analytical(mdl, mtl, sol, E0, omeeV, T, tpump)/E0;
-    
+    alph_anl=ns.analytical(mdl, mtl, sol, E0, omeeV, T, tpump)/E0;
+    eps1 = ns.metal(omeeV);
+    eps2 = ns.active(omeeV,eps_b);
+    alph = polarizability(eps1,eps2);
+    alfa<<real(alph)<<" "<<imag(alph)<<" "<<real(alph_anl)<<" "<<imag(alph_anl)<<endl;    
   return 0;
   }
     
