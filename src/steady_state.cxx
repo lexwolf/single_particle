@@ -51,7 +51,7 @@ int main(int argc, char** argv){
     ns.set_host(sol);
     ns.set_active(active);
     
-    ns.steady_state(mdl, mtl, sol, omemi, omema);
+    ns.steady_state(mdl, mtl, sol, omemi, omema, 100000);
   return 0;
   }
     
