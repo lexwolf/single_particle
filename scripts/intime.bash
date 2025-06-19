@@ -119,9 +119,9 @@ do
 
     # Select gnuplot script
     if [ "$plot_mode" == "num" ]; then
-      gnuplot ../scripts/numtimeQS.gp
+      gnuplot ../scripts/numtime.gp
     elif [ "$plot_mode" == "anl" ]; then
-      gnuplot ../scripts/anltimeQS.gp
+      gnuplot ../scripts/anltime.gp
     fi
     
     name=$(printf $frm $i)
