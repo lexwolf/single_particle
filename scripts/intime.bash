@@ -39,8 +39,9 @@ fi
 
 if $use_compile; then
   echo "> Compiling selected sources..."
-  # Always compile steady-state (used in both cases)
+  # Always compile steady-state and frohlich
   g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/steady_state.cxx -o ../bin/sts -lgsl -lgslcblas -lm -larmadillo
+  g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/frohlich.cxx -o ../bin/fro -lgsl -lgslcblas -lm -larmadillo
   # Compile time-dependent module depending on plot mode
   if [ "$plot_mode" == "num" ]; then
     g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/num_time.cxx -o ../bin/num -lgsl -lgslcblas -lm -larmadillo
@@ -93,7 +94,18 @@ do
   dig="${#N}"
   frm="%0${dig}d"
   dom=$(echo "($omema - $omemi)/$N" | bc -l)
-
+  # Execute steady-state
+  ../bin/sts
+  cmpcname="../data/output/compounds.dat"
+  # Create the background data
+  awk '{
+      if (NR > 7) { 
+          for (i = -1; i <= 1; i++) { 
+          print $1, i, ($5 < 0 ? -$5 : $5) 
+          } 
+          print ""
+          }
+      }' $cmpcname > "../data/output/background.dat"
   for (( i=0; i<=N; i++ ))
   do
     ome=$(echo "$omemi + $i * $dom" | bc -l)
@@ -103,15 +115,13 @@ do
     elif [ "$plot_mode" == "anl" ]; then
     ../bin/anl $ome
     fi
-    # Always execute steady-state
-    ../bin/sts
     echo $ome > ../data/output/omega.dat
 
     # Select gnuplot script
     if [ "$plot_mode" == "num" ]; then
-      gnuplot ../scripts/numtimeQS.gp
+      gnuplot ../scripts/numtime.gp
     elif [ "$plot_mode" == "anl" ]; then
-      gnuplot ../scripts/anltimeQS.gp
+      gnuplot ../scripts/anltime.gp
     fi
     
     name=$(printf $frm $i)

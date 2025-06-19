@@ -36,11 +36,18 @@ int main(){
   double *result;
   
   char mtl[16], mdl[16], sol[16], active[16];
-  nanosphere ns;
-  fstream nano, res3;  
   
-  nano.open("../data/input/nanosphere_eV.dat", ios::in);
-
+  nanosphere ns;    
+  ifstream nano("../data/input/nanosphere_eV.dat");
+  if (!nano) {
+      std::cerr << "Error: Cannot open input file" << std::endl;
+      return 1;
+    }
+  ofstream ogth("../data/output/frohlich.dat");
+  if (!ogth) {
+      std::cerr << "Error: Cannot open output file" << std::endl;
+      return 1;
+  }
   nano>>ns.r1>>ns.Dome>>ns.ome_0>>ns.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
 
   ns.init();
@@ -49,7 +56,7 @@ int main(){
   ns.set_active(active);
 
   result=ns.frohlich_optimal(omemi, omema, eps_b);
-
+  ogth<<result[0]<<" "<<result[1];
   cout<<result[0]<<" "<<result[1];
   return 0;
   }
