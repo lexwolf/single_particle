@@ -66,7 +66,7 @@ class nanosphere{
 	double ome_p2,ome_L2, tau_d2, tau_L2, ome_0, gamd, kap;
 	double ome_o2, ome, f, n, enne, omeB;
 	double Ome_p, Gam_d, Gam, eps_inf, Ome_L, Gam_L, Deps, DELTAOme;
-	std::complex<double> eps3;
+	std::complex<double> eps3, ceps_inf;
 	void init(){
 	  /** all values are in MKS **/
 	  img = std::complex<double> (0., 1.);
@@ -233,7 +233,8 @@ class nanosphere{
 	  if (lrntz == -1){
 	     eps.real(gsl_spline_eval (reeps, ome, acc));
 	     eps.imag(gsl_spline_eval (imeps, ome, acc));
-	    } else eps= eps_inf - ome_p2/(ome*(ome+img*Gam_d));// - lrntz*Deps*ome_L2/((ome*ome-ome_L2)+img*ome/tau_L);
+	    } else eps = eps_inf - ome_p2/(ome*(ome+img*Gam_d));// - lrntz*Deps*ome_L2/((ome*ome-ome_L2)+img*ome/tau_L);
+	  ceps_inf =  eps + ome_p2/(ome*(ome+img*Gam_d));
 	  return eps;
 	  }
 	  
@@ -385,8 +386,8 @@ class nanosphere{
 
 	    std::vector<std::pair<double,std::complex<double>>> valph;
 	    
-	    double tau2, gamd, ome0, eps3, pG = fabs(G), *p0, *p1, *p2, *nv;
-	    std::complex<double> GG, OmeH, GamP, OmeP, **A, detA, *kap, *odv;
+	    double tau2, gamd, ome0, eps3, pG = fabs(G), *nv;
+	    std::complex<double> GG, OmeH, GamP, OmeP, *p0, *p1, *p2, **A, detA, *kap, *odv;
 	    
 	    A = new std::complex<double>*[3];
 	    for(int i = 0; i <= 2; i++)
@@ -482,9 +483,9 @@ class nanosphere{
 		    "\t"<<std::setw(11)<<std::setiosflags (std::ios::left)<<imag(eps2)<< // 5 Im(eps2)
 		    std::endl;
 
-		p0 = pcfc0(eps_inf, eps_b, eps_s, rho);
-		p1 = pcfc1(eps_inf, eps_b, eps_s, rho);
-		p2 = pcfc2(eps_inf, eps_b, eps_s, rho);
+		p0 = pcfc0(ceps_inf, eps_b, eps_s, rho);
+		p1 = pcfc1(ceps_inf, eps_b, eps_s, rho);
+		p2 = pcfc2(ceps_inf, eps_b, eps_s, rho);
 		
 		ome = omeeV/Ome_p;
 		
@@ -585,8 +586,8 @@ class nanosphere{
 		eps_b=set_host(hst);
 		int steste=0;
 		std::complex<double> eps1e, eps2e, eps1, eps2, alph;
-		double omep, t, tau1, tau2, gamd, ome0, pG = fabs(G), *p0, *p1, *p2, *p3, *p, *nv, tildeN;
-		std::complex<double> GG, OmeH, chiH, GamP, OmeP, chiP, **A, *B, dip, po, *odv;
+		double omep, t, tau1, tau2, gamd, ome0, pG = fabs(G), *nv, tildeN;
+		std::complex<double> GG, OmeH, chiH, GamP, OmeP, chiP, **A, *B, *p0, *p1, *p2, *p3, *p, dip, po, *odv;
 
 		double dpTOT=0, t0;
 		double omeR;
@@ -603,10 +604,10 @@ class nanosphere{
 
 		odv = new std::complex<double> [3];
 		
-		p0 = new double[3];
-		p1 = new double[3];
-		p2 = new double[3];
-		p3 = new double[3];
+		p0 = new std::complex<double>[3];
+		p1 = new std::complex<double>[3];
+		p2 = new std::complex<double>[3];
+		p3 = new std::complex<double>[3];
 		
 		if (T==0){ 
 		    T=100000;
@@ -661,10 +662,10 @@ class nanosphere{
 // 		std::cout<<"|Esat|² = 1./("<<fabs(G)<<"*"<<tau1<<") = "<<1./(fabs(G)*tau1)<<std::endl;
 // 		std::cout<<" ../bin/Esat   = "<<sqrt(1./(fabs(G)*tau1))<<std::endl;
 		
-		p0 = pcfc0(eps_inf, eps_b, eps_s, rho);
-		p1 = pcfc1(eps_inf, eps_b, eps_s, rho);
-		p2 = pcfc2(eps_inf, eps_b, eps_s, rho);
-		p3 = pcfc3(eps_inf, eps_b, eps_s, rho);
+		p0 = pcfc0(ceps_inf, eps_b, eps_s, rho);
+		p1 = pcfc1(ceps_inf, eps_b, eps_s, rho);
+		p2 = pcfc2(ceps_inf, eps_b, eps_s, rho);
+		p3 = pcfc3(ceps_inf, eps_b, eps_s, rho);
 		if (ns == 1) p=p3;
 		    else p=p0;
 
@@ -790,8 +791,8 @@ class nanosphere{
 		eps_b=set_host(hst);
 		int steste=0, amp=0;
 		std::complex<double> eps1e, eps2e, eps1, eps2, alph;
-		double omep, t, tau1, tau2, gamd, ome0, pG = fabs(G), *p0, *p1, *p2, *p3, *p, *nv, N, tildeN;
-		std::complex<double> GG, OmeH, chiH, GamP, OmeP, chiP, **A, *B, dip, *odv;
+		double omep, t, tau1, tau2, gamd, ome0, pG = fabs(G), *nv, N, tildeN;
+		std::complex<double> GG, OmeH, chiH, GamP, OmeP, chiP, **A, *B, *p0, *p1, *p2, *p3, *p, dip, *odv;
 				
 		A = new std::complex<double>*[3];
 		for(int i = 0; i <= 2; i++)
@@ -852,10 +853,10 @@ class nanosphere{
 		ome0 = nv[3];
 		GG = set_GG(G, tau2);
 
-		p0 = pcfc0(eps_inf, eps_b, eps_s, rho);
-		p1 = pcfc1(eps_inf, eps_b, eps_s, rho);
-		p2 = pcfc2(eps_inf, eps_b, eps_s, rho);
-		p3 = pcfc3(eps_inf, eps_b, eps_s, rho);
+		p0 = pcfc0(ceps_inf, eps_b, eps_s, rho);
+		p1 = pcfc1(ceps_inf, eps_b, eps_s, rho);
+		p2 = pcfc2(ceps_inf, eps_b, eps_s, rho);
+		p3 = pcfc3(ceps_inf, eps_b, eps_s, rho);
 		if ((sol != NULL)) p=p3;
 		    else p=p0;
 		ome = omeeV/Ome_p;

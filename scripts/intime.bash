@@ -106,6 +106,7 @@ do
           print ""
           }
       }' $cmpcname > "../data/output/background.dat"
+  echo "> Calculating time dependency for frequency:"
   for (( i=0; i<=N; i++ ))
   do
     ome=$(echo "$omemi + $i * $dom" | bc -l)
@@ -115,6 +116,8 @@ do
     elif [ "$plot_mode" == "anl" ]; then
     ../bin/anl $ome
     fi
+    om=$(printf "%.2f" "$ome")
+    echo ">   ome = $om eV"
     echo $ome > ../data/output/omega.dat
 
     # Select gnuplot script
@@ -128,8 +131,9 @@ do
     mv ../img/intime.pdf ../img/${file[$j]}/pdf/im-${name}.pdf
     mv ../img/intime.png ../img/${file[$j]}/png/im-${name}.png
   done
-
+  echo "> Creating ${file[$j]}.gif ..."
   convert -dispose previous -delay 20 ../img/${file[$j]}/png/*.png -loop 0 ../img/${file[$j]}.gif
+  echo "> done!"
 done
 
 # Reinstate the original content of the file
