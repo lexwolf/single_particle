@@ -44,10 +44,16 @@ int main(int argc, char** argv){
     omeeV=atof(argv[1]);
     
     nanosphere ns;    
-    fstream nano, time;
-
-    nano.open("../data/input/nanosphere_eV.dat", ios::in);
-    time.open("../data/input/time.dat", ios::in);
+    ifstream nano("../data/input/nanosphere_eV.dat");
+    if (!nano) {
+        std::cerr << "Error: Cannot open input file" << std::endl;
+        return 1;
+    }
+    ifstream time("../data/input/time.dat");
+    if (!time) {
+        std::cerr << "Error: Cannot open input file" << std::endl;
+        return 1;
+    }
 
 
     nano>>ns.r1>>ns.Dome>>ns.ome_0>>ns.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
