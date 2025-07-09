@@ -45,10 +45,16 @@ int main(int argc, char** argv) {
     nanosphere  simulation;
     simulation.init();
     
-    fstream nano, time;
-
-    nano.open("../data/input/nanosphere_eV.dat", ios::in);
-    time.open("../data/input/time.dat", ios::in);
+    ifstream nano("../data/input/nanosphere_eV.dat");
+    if (!nano) {
+        std::cerr << "Error: Cannot open input file" << std::endl;
+        return 1;
+    }
+    ifstream time("../data/input/time.dat");
+    if (!time) {
+        std::cerr << "Error: Cannot open input file" << std::endl;
+        return 1;
+    }
     
     nano>>simulation.r1>>simulation.Dome>>simulation.ome_0>>simulation.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
     time>>T>>tpump;  
