@@ -115,19 +115,26 @@ class nanosphere{
 		if (sel==1) strcpy(jc,"../data/input/goldJCeV.dat");
 		else if (sel==2) strcpy(jc,"../data/input/goldWeV.dat");
 		else exit(-1);
-		std::fstream inp;
-		inp.open(jc,std::ios::in);
-		while(!inp.eof()){
-		  inp.getline (line,900);
-		  rows++;
-		  }
-		inp.close();
-		omem=new double [rows];
-		reps=new double [rows];
-		ieps=new double [rows];
-		inp.open(jc, std::ios::in);
-		for (int i=0; i<rows; i++)
-		  inp>>la>>omem[i]>>reps[i]>>ieps[i]>>Dr>>Di;
+                std::ifstream inp(jc);
+                if (!inp) {
+                  std::cerr << "Error: Cannot open input file" << std::endl;
+                  exit(1);
+                }
+                while(!inp.eof()){
+                  inp.getline (line,900);
+                  rows++;
+                  }
+                inp.close();
+                omem=new double [rows];
+                reps=new double [rows];
+                ieps=new double [rows];
+                std::ifstream inp2(jc);
+                if (!inp2) {
+                  std::cerr << "Error: Cannot open input file" << std::endl;
+                  exit(1);
+                }
+                for (int i=0; i<rows; i++)
+                  inp2>>la>>omem[i]>>reps[i]>>ieps[i]>>Dr>>Di;
 		acc = gsl_interp_accel_alloc ();
 		reeps = gsl_spline_alloc (gsl_interp_cspline, rows);
 		imeps = gsl_spline_alloc (gsl_interp_cspline, rows);
@@ -151,20 +158,27 @@ class nanosphere{
 		lrntz=0;
 		} else if(strcmp(mdl,"spline")==0){
 		strcpy(jc,"../data/input/silverJCeV.dat");
-		std::fstream inp;
-		inp.open(jc,std::ios::in);
-		while(!inp.eof()){
-		  inp.getline (line,900);
-		  rows++;
-		  }
-		inp.close();
-		omem=new double [rows];
-		reps=new double [rows];
-		ieps=new double [rows];
+                std::ifstream inp(jc);
+                if (!inp) {
+                  std::cerr << "Error: Cannot open input file" << std::endl;
+                  exit(1);
+                }
+                while(!inp.eof()){
+                  inp.getline (line,900);
+                  rows++;
+                  }
+                inp.close();
+                omem=new double [rows];
+                reps=new double [rows];
+                ieps=new double [rows];
 
-		inp.open(jc, std::ios::in);
-		for (int i=0; i<rows; i++)
-		  inp>>la>>omem[i]>>reps[i]>>ieps[i]>>Dr>>Di;
+                std::ifstream inp2(jc);
+                if (!inp2) {
+                  std::cerr << "Error: Cannot open input file" << std::endl;
+                  exit(1);
+                }
+                for (int i=0; i<rows; i++)
+                  inp2>>la>>omem[i]>>reps[i]>>ieps[i]>>Dr>>Di;
 		acc = gsl_interp_accel_alloc ();
 		reeps = gsl_spline_alloc (gsl_interp_cspline, rows);
 		imeps = gsl_spline_alloc (gsl_interp_cspline, rows);
@@ -213,21 +227,27 @@ class nanosphere{
 	  if(strcmp(mod,"lorentz")==0) act=1.;
 	    else if(strcmp(mod,"flat")==0) act=0.;
 	    else if(strcmp(mod,"interpole")==0){
-		std::fstream inp;
-		strcpy(mc,"../data/input/mc.dat");
-		inp.open("../data/input/mc.dat",std::ios::in);
-		while(!inp.eof()){
-		  inp.getline (line,900);
-		  rows++;
-		  }
-		rows--;
-		inp.close();
-		omem=new double [rows];
-		reph=new double [rows];
-		ieph=new double [rows];
-		inp.open("../data/input/mc.dat", std::ios::in);
-		for (int i=0; i<rows; i++){
-		  inp>>omem[i]>>reph[i]>>ieph[i];
+                std::ifstream inp("../data/input/mc.dat");
+                if (!inp) {
+                  std::cerr << "Error: Cannot open input file" << std::endl;
+                  exit(1);
+                }
+                while(!inp.eof()){
+                  inp.getline (line,900);
+                  rows++;
+                  }
+                rows--;
+                inp.close();
+                omem=new double [rows];
+                reph=new double [rows];
+                ieph=new double [rows];
+                std::ifstream inp2("../data/input/mc.dat");
+                if (!inp2) {
+                  std::cerr << "Error: Cannot open input file" << std::endl;
+                  exit(1);
+                }
+                for (int i=0; i<rows; i++){
+                  inp2>>omem[i]>>reph[i]>>ieph[i];
 		  reph[i]=reph[i]-2.220;
 		  ieph[i]=ieph[i]+0.12;
 		  }
@@ -420,10 +440,21 @@ class nanosphere{
 
 		odv = new std::complex<double> [3];
 
-	    std::fstream comp, stat, egva;
-	    stat.open("../data/output/stationary.dat", std::ios::out);
-	    comp.open("../data/output/compounds.dat", std::ios::out);
-	    egva.open("../data/output/eigenvalues.dat", std::ios::out);
+            std::ofstream stat("../data/output/stationary.dat");
+            if (!stat) {
+                std::cerr << "Error: Cannot open output file" << std::endl;
+                exit(1);
+            }
+            std::ofstream comp("../data/output/compounds.dat");
+            if (!comp) {
+                std::cerr << "Error: Cannot open output file" << std::endl;
+                exit(1);
+            }
+            std::ofstream egva("../data/output/eigenvalues.dat");
+            if (!egva) {
+                std::cerr << "Error: Cannot open output file" << std::endl;
+                exit(1);
+            }
 	    
 	    stat<<"# * STATIC * "<<std::endl;
 	    stat<<"#"<<std::endl;
@@ -531,9 +562,21 @@ class nanosphere{
 
 		wavetable = gsl_fft_complex_wavetable_alloc (nfft);
 		workspace = gsl_fft_complex_workspace_alloc (nfft);
-	    std::ofstream  wve("../data/output/wave.dat");
-	    std::ofstream  frr("../data/output/fourier.dat");
-    	    std::ofstream  flg("../data/output/fourier.log");
+            std::ofstream  wve("../data/output/wave.dat");
+            if (!wve) {
+                std::cerr << "Error: Cannot open output file" << std::endl;
+                exit(1);
+            }
+            std::ofstream  frr("../data/output/fourier.dat");
+            if (!frr) {
+                std::cerr << "Error: Cannot open output file" << std::endl;
+                exit(1);
+            }
+            std::ofstream  flg("../data/output/fourier.log");
+            if (!flg) {
+                std::cerr << "Error: Cannot open output file" << std::endl;
+                exit(1);
+            }
 	    flg<<nfft<<" "<<dt<<" "<<Ome_p<<std::endl;
 		for (int i=0; i<nfft; i++) {
 			REAL(data,i) = wave[i].real();
@@ -612,9 +655,16 @@ class nanosphere{
 		    steste=1;
 		    }
 
-		std::fstream dyna, fnct;
-		dyna.open("../data/output/numtime.dat", std::ios::out);
-		fnct.open("../data/output/numfunc.dat", std::ios::out);
+                std::ofstream dyna("../data/output/numtime.dat");
+                if (!dyna) {
+                    std::cerr << "Error: Cannot open output file" << std::endl;
+                    exit(1);
+                }
+                std::ofstream fnct("../data/output/numfunc.dat");
+                if (!fnct) {
+                    std::cerr << "Error: Cannot open output file" << std::endl;
+                    exit(1);
+                }
 		
 		dyna<<"# * NUMERICAL * "<<std::endl;
 		dyna<<"#"<<std::endl;
@@ -800,9 +850,16 @@ class nanosphere{
 		    steste=1;
 		    }
 		
-		std::fstream dyna, fnct;
-		dyna.open("../data/output/anltime.dat", std::ios::out);
-		fnct.open("../data/output/anlfunc.dat", std::ios::out);
+                std::ofstream dyna("../data/output/anltime.dat");
+                if (!dyna) {
+                    std::cerr << "Error: Cannot open output file" << std::endl;
+                    exit(1);
+                }
+                std::ofstream fnct("../data/output/anlfunc.dat");
+                if (!fnct) {
+                    std::cerr << "Error: Cannot open output file" << std::endl;
+                    exit(1);
+                }
 		
 		dyna<<"# * ANALYTICAL * "<<std::endl;
 		dyna<<"#"<<std::endl;
