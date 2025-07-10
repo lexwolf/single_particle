@@ -373,6 +373,67 @@ std::complex<double> metal(double ome) {
 		
 		return odv;
 		}
+
+std::vector<std::pair<double,std::complex<double>>> gimme_emi_kap(char* mdl, char* mtl, char* hst, double omemi, double omema, int omeN=1000, char* sol=0, double rho=0){
+        std::vector<std::pair<double,std::complex<double>>> vkamp;
+        int omi;
+        std::complex<double> GG, OmeH, GamP, OmeP, **A, *p0, *p1, *p2, gam1, gam2, xi, *kap, *odv;
+        
+        double *nv, omeeV, dome  = (omema-omemi)/omeN, ome;
+        double  eps_b, eps_s, tau2, gamd, ome0;
+
+        if ((sol != NULL)) {
+            eps_s=set_host(sol);
+            } else eps_s=0;
+        eps_b=set_host(hst);
+
+        A = new std::complex<double>*[3];
+        for(int i = 0; i <= 2; i++)
+            A[i] = new std::complex<double>[3];
+        
+        kap  = new std::complex<double>[3];
+        nv   = new double[4];
+        odv  = new std::complex<double> [3];
+
+        // normalized variables
+        nv = normalized_variables ();
+        tau2 = nv[1];
+        gamd = nv[2];
+        ome0 = nv[3];
+        GG   = set_GG(G, tau2);
+
+        
+        for (omi=0; omi<=omeN; omi++){
+            omeeV = omemi + omi*dome;
+			metal(omeeV);
+
+			p0 = pcfc0(ceps_inf, eps_b, eps_s, rho);
+			p1 = pcfc1(ceps_inf, eps_b, eps_s, rho);
+			p2 = pcfc2(ceps_inf, eps_b, eps_s, rho);
+            
+			ome  = omeeV/Ome_p;
+
+            odv  = set_ome_dep_vrbls(ome, ome0, tau2, gamd);
+            OmeH = odv[0];
+            OmeP = odv[1];
+            GamP = odv[2];
+    
+            A   = coefficients(OmeH, OmeP, GG, GamP, p0, p1, p2);
+            kap  = eigenvalues(A);
+            
+            double maxVal = kap[0].real();
+            int    imax = 0;
+
+            for (int i = 1; i < 3; i++) {
+                if (kap[i].real() > maxVal) {
+                    maxVal = kap[i].real();
+                    imax = i;
+                    }
+                }
+            vkamp.push_back(std::make_pair(omeeV, kap[imax]));
+            }
+        return vkamp;
+        }
 		
 	std::vector<std::pair<double,std::complex<double>>>  steady_state(char* mdl , char* mtl ,char* hst ,double omemi, double omema, int omeN=10000, char* sol=0, double rho=0){
 	    int omi, ns=0;
