@@ -16,7 +16,7 @@ fro=(`../bin/sfr`)
 omeG=${fro[0]}
 Gth=${fro[1]}
 echo $a $Dome $omeG $G $omemi $omema $metal $model $gain_model $solvent $none $rap $host> ../data/input/nanosphere_eV.dat
-focurr=$metal"-in-"$solvent"/"
+focurr=$metal"-in-"$solvent
 echo "> ...Done!"
 echo
 echo "> the emission threshold is Gth = "$Gth
@@ -49,7 +49,6 @@ echo "> Creating image folders: map_bdr"
 mkdir $mnewdir"map_bdr"
 echo "> ...Done!"
 echo 
-focurr=$metal"-in-"$solvent"/"
 echo "> Removing old files from the image folder: GIF"
 gifdir="../img/GIF/"$focurr
 rm -fr $gifdir

@@ -234,8 +234,7 @@ std::complex<double> metal(double ome) {
         eps.imag(gsl_spline_eval(imeps, ome, acc));
     } else {
         eps = eps_inf - ome_p2 / (ome * (ome + img * Gam_d));
-    }
-
+    } 
     ceps_inf = eps + ome_p2 / (ome * (ome + img * Gam_d));
     return eps;
 }
@@ -724,7 +723,7 @@ std::vector<std::pair<double,std::complex<double>>> gimme_emi_kap(char* mdl, cha
 		GG = set_GG(G, tau2);
 // 		std::cout<<"|Esat|² = 1./("<<fabs(G)<<"*"<<tau1<<") = "<<1./(fabs(G)*tau1)<<std::endl;
 // 		std::cout<<" ../bin/Esat   = "<<sqrt(1./(fabs(G)*tau1))<<std::endl;
-		
+		metal(omeeV); //needed to calculate ceps_inf
 		p0 = pcfc0(ceps_inf, eps_b, eps_s, rho);
 		p1 = pcfc1(ceps_inf, eps_b, eps_s, rho);
 		p2 = pcfc2(ceps_inf, eps_b, eps_s, rho);
@@ -743,7 +742,7 @@ std::vector<std::pair<double,std::complex<double>>> gimme_emi_kap(char* mdl, cha
 		chiH = -GG/OmeH;
 		chiP = -GamP/OmeP;
 
-		eps1e = eps_inf + chiP;
+		eps1e = ceps_inf + chiP;
 		eps2e = eps_b   + chiH;
 
 
@@ -915,7 +914,7 @@ std::vector<std::pair<double,std::complex<double>>> gimme_emi_kap(char* mdl, cha
 		gamd = nv[2];
 		ome0 = nv[3];
 		GG = set_GG(G, tau2);
-
+		metal(omeeV); //needed to calculate ceps_inf
 		p0 = pcfc0(ceps_inf, eps_b, eps_s, rho);
 		p1 = pcfc1(ceps_inf, eps_b, eps_s, rho);
 		p2 = pcfc2(ceps_inf, eps_b, eps_s, rho);
