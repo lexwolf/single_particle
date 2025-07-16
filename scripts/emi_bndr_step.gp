@@ -4,19 +4,19 @@ reset
 at(file, row, col) = system( sprintf("awk -v row=%d -v col=%d 'NR == row {print $col}' %s", row, col, file) )
 file="../data/output/oGp/data4plot.dat" ;
 # DONE
-# row=1 ; col=1
-# omin = at(file,row,col)
-# row=1 ; col=2
-# omax = at(file,row,col)
+row=1 ; col=1
+omin = at(file,row,col)
+row=1 ; col=2
+omax = at(file,row,col)
 row=1 ; col=3
 Gmax = at(file,row,col)
 Gmax=abs(Gmax)
 
-file="../data/input/nanosphere_eV.dat" ;
-row=1 ; col=5
-omin = at(file,row,col)
-row=1 ; col=6
-omax = at(file,row,col)
+# file="../data/input/nanosphere_eV.dat" ;
+# row=1 ; col=5
+# omin = at(file,row,col)
+# row=1 ; col=6
+# omax = at(file,row,col)
 
 set xlabel "Energy (eV)"
 set ylabel "Quantity of gain G (n. u.)"

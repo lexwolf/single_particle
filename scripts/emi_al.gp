@@ -6,9 +6,16 @@ file="../data/input/nanosphere_eV.dat" ;
 # READING SPECTRUM RANGE (omin omax) FROM "../data/input/nanosphere_eV.dat"
 row=1 ; col=3
 omeG = at(file,row,col)
-row=1 ; col=5
+# row=1 ; col=5
+# omin = at(file,row,col)
+# row=1 ; col=6
+# omax = at(file,row,col)
+
+file="../data/output/oGp/data4plot.dat" ;
+# DONE
+row=1 ; col=1
 omin = at(file,row,col)
-row=1 ; col=6
+row=1 ; col=2
 omax = at(file,row,col)
 
 p3mx=0.001
@@ -16,6 +23,7 @@ cnvrsn0=p3mx/25.
 # DONE
 
 # READING GAIN QUANTITY (G) FROM "../data/input/nanosphere_eV.dat"
+file="../data/input/nanosphere_eV.dat" ;
 row=1 ; col=4
 G = abs(at(file,row,col))
 # DONE

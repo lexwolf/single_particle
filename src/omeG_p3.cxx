@@ -97,7 +97,7 @@ int main(){
         rzero = find_zeros(vome, ralph);
         izero = find_zeros(vome, ialph);
 
-        vkape = ns.gimme_emi_kap(mdl, mtl, sol, omemi, omema, omeN);    
+        vkape = ns.eigen_values(mdl, mtl, sol, omemi, omema, omeN);    
         
         kzero = fnd_extrm(vkape, ns.Ome_p);
         

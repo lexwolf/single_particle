@@ -373,7 +373,7 @@ std::complex<double> metal(double ome) {
 		return odv;
 		}
 
-std::vector<std::pair<double,std::complex<double>>> gimme_emi_kap(char* mdl, char* mtl, char* hst, double omemi, double omema, int omeN=1000, char* sol=0, double rho=0){
+std::vector<std::pair<double,std::complex<double>>> eigen_values(char* mdl, char* mtl, char* hst, double omemi, double omema, int omeN=1000, char* sol=0, double rho=0){
         std::vector<std::pair<double,std::complex<double>>> vkamp;
         int omi;
         std::complex<double> GG, OmeH, GamP, OmeP, **A, *p0, *p1, *p2, gam1, gam2, xi, *kap, *odv;
