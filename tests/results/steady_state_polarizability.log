@@ -1,7 +1,7 @@
 Steady-state polarizability calculation results:
   Metal model: drude
   Metal type: silver
-  Spectral range: [2.8, 3.6] eV
+  Spectral range: [3.1, 3.4] eV
   Solvent: water
 
 Check simulation output for detailed results.

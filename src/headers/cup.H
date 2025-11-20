@@ -808,19 +808,20 @@ std::complex<double> metal(double ome) {
 				dyna<<"  "<<std::setw(8)<<std::setiosflags (std::ios::left)<<t/omep*1.e+12<< // 1 time (ps)
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(alph)<<     // 2 Re(alpha)
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(alph)<<     // 3 Im(alpha)
-					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(dip)<<     // 4 Re(dip)
-					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(dip)<<     // 5 Im(dip)
-					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<N<<             // 6 N
-					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(po)<<      // 7 Re(p0)
-					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(po)<<      // 8 Im(p0) 
+					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(dip)<<      // 4 Re(dip)
+					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(dip)<<      // 5 Im(dip)
+					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<N<<              // 6 N
+					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(dip-E0)<<    // 7 Re(p0)
+					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(dip-E0)<<    // 8 Im(p0)
+					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<0.5*ome*imag(conj(dip-E0)*q[2])<<    // 9 Q
 					std::endl;
 				fnct<<"  "<<std::setw(8)<<std::setiosflags (std::ios::left)<<t/omep*1.e+12<< // 1 time (ps)
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(q[0])<<   // 2 Re(q0)
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(q[0])<<   // 3 Im(q0)
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(q[1])<<   // 4 Re(q1)
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(q[1])<<   // 5 Im(q1)
-					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(q[2])<<   // 6 Re(q2)
-					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(q[2])<<   // 7 Im(q2)
+					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(q[2])<<   // 6 Re(q2) new Re(q0)
+					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(q[2])<<   // 7 Im(q2) new Im(q0)
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<N<<    // 8 N
 					std::endl;
 				}
