@@ -135,7 +135,10 @@ plot "../data/output/numtime.dat" u 1:2 w l ls 6 t "Re[{/Symbol a}]/(4{/Symbol p
      "../data/output/numtime.dat" u 1:3 w l ls 7 t "Im[{/Symbol a}]/(4{/Symbol p}a^3)";
      
 dome=(omax-omin)/8.
-dome=sprintf("%.1f", dome);
+dscale=10**floor(log10(dome))
+dbase=dome/dscale
+dome=(dbase < 2.5 ? dscale : (dbase <= 7.5 ? 5*dscale : 10*dscale))
+
 set xtics omin+dome, dome
 set xrange [omin:omax];
 set label 22 at graph 0.02, 0.08 "{/=24 (b)}";
