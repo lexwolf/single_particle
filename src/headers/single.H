@@ -7,10 +7,10 @@
  * - Any global ε0 factors present in the PDF are assumed absorbed into Γm and Γg.
  *
  * Parameter mapping (your confirmation):
- *   OmeP  = Ωm
- *   OmeH  = Ωg
- *   GG    = Γg * N      (so N is already included)
- *   GamP  = Γm
+ *   OmeM   = Ωm
+ *   OmeG   = Ωg
+ *   GamGxN = ΓgxN      (so N is already included)
+ *   GamM   = Γm
  *
  * Coefficient storage convention (dipolar, uniform inversion):
  *   p[0] = p00 = p20 = -1/(eps_inf + 2 eps_b)
@@ -67,10 +67,10 @@ inline std::complex<double>* pcfc3(std::complex<double>, double, double = 0.0, d
 // A corresponds to PDF Eq. (42) under your normalization.
 // Returns A[3][3]; caller owns memory (delete[] rows then delete[] A).
 // ------------------------------------------------------------
-inline std::complex<double>** coefficients(std::complex<double> OmeH,
-                                           std::complex<double> OmeP,
-                                           std::complex<double> GG,
-                                           std::complex<double> GamP,
+inline std::complex<double>** coefficients(std::complex<double> OmeG,
+                                           std::complex<double> OmeM,
+                                           std::complex<double> GamGxN,
+                                           std::complex<double> GamM,
                                            std::complex<double>* p0,
                                            std::complex<double>* /*p1*/ = nullptr,
                                            std::complex<double>* /*p2*/ = nullptr,
@@ -81,19 +81,19 @@ inline std::complex<double>** coefficients(std::complex<double> OmeH,
     for (int i = 0; i < 3; ++i) A[i] = new std::complex<double>[3];
 
     // Row 0: metal equation
-    A[0][0] = OmeP + GamP * p0[0];   // Ωm + Γm p00
-    A[0][1] =        GamP * p0[1];   // Γm p01
-    A[0][2] =        GamP * p0[2];   // Γm p02
+    A[0][0] = OmeM + GamM * p0[0];   // Ωm + Γm p00
+    A[0][1] =        GamM * p0[1];   // Γm p01
+    A[0][2] =        GamM * p0[2];   // Γm p02
 
     // Row 1: gain-q1 equation (decoupled)
     A[1][0] = 0.0;
-    A[1][1] = OmeH;                 // Ωg
+    A[1][1] = OmeG;                 // Ωg
     A[1][2] = 0.0;
 
     // Row 2: gain-q2 equation
-    A[2][0] = GG * p0[0];            // (Γg N) p20 = (Γg N) p00
-    A[2][1] = GG * p0[1];            // (Γg N) p21 = (Γg N) p01
-    A[2][2] = OmeH + GG * p0[2];     // Ωg + (Γg N) p22 = Ωg + (Γg N) p02
+    A[2][0] = GamGxN * p0[0];            // (Γg N) p20 = (Γg N) p00
+    A[2][1] = GamGxN * p0[1];            // (Γg N) p21 = (Γg N) p01
+    A[2][2] = OmeG + GamGxN * p0[2];     // Ωg + (Γg N) p22 = Ωg + (Γg N) p02
 
     return A;
 }
@@ -102,8 +102,8 @@ inline std::complex<double>** coefficients(std::complex<double> OmeH,
 // Inhomogeneous vector b in PDF order (Eq. 43 under normalization).
 // Returns B[3]; caller owns memory (delete[]).
 // ------------------------------------------------------------
-inline std::complex<double>* inhomogeneous(std::complex<double> GG,
-                                          std::complex<double> GamP,
+inline std::complex<double>* inhomogeneous(std::complex<double> GamGxN,
+                                          std::complex<double> GamM,
                                           double E0,
                                           std::complex<double>* p0,
                                           std::complex<double>* /*p1*/ = nullptr,
@@ -116,9 +116,9 @@ inline std::complex<double>* inhomogeneous(std::complex<double> GG,
     const std::complex<double> p03 = p23 - 1.0;   // p03 = p23 - 1 (PDF)
 
     // b = ( Γm p03 E0,  -Γg N E0,  Γg N p23 E0 )
-    B[0] = GamP * p03 * E0;
-    B[1] = -GG * E0;               // p13 = -1
-    B[2] =  GG * p23 * E0;
+    B[0] = GamM * p03 * E0;
+    B[1] = -GamGxN * E0;               // p13 = -1
+    B[2] =  GamGxN * p23 * E0;
 
     return B;
 }
