@@ -802,18 +802,13 @@ std::complex<double> metal(double ome) {
 		fnct<<"# t (ps)\treal(q0)\timag(q0)\treal(q1)\timag(q1)\treal(q2)\timag(q2)"<<std::endl;
 		fnct<<"#"<<std::endl;
 
-		omep = eV2j*Ome_p*2.*M_PI/h;// omep = eV2j*Ome_p/h;  //converto in Hz
-		// normalized variables
+		omep = eV2j*Ome_p*2.*M_PI/h; // normalized variables
 		nv = normalized_variables ();
 		tau1 = nv[0];
 		tau2 = nv[1];
 		gamd = nv[2];
 		ome0 = nv[3];
-// 		std::cout<<"tau1 = "<<tau1/omep*1.e+12<<" ps"<<std::endl;
-// 		exit(0);
 		GG = set_GG(G, tau2);
-// 		std::cout<<"|Esat|² = 1./("<<fabs(G)<<"*"<<tau1<<") = "<<1./(fabs(G)*tau1)<<std::endl;
-// 		std::cout<<" ../bin/Esat   = "<<sqrt(1./(fabs(G)*tau1))<<std::endl;
 		metal(omeeV); //needed to calculate ceps_inf
 		p0 = pcfc0(ceps_inf, eps_b, eps_s, rho);
 		p1 = pcfc1(ceps_inf, eps_b, eps_s, rho);
@@ -844,7 +839,7 @@ std::complex<double> metal(double ome) {
 		
 		double N=0;
 		std::complex<double> *q ;
-		q = new std::complex<double>[3] {0,0};
+		q = new std::complex<double>[3]{0.0, 0.0, 0.0};  // PDF order, fully initialized
 
 		int Nt=T/dt;
 		int Nprint=Nt;
@@ -863,13 +858,12 @@ std::complex<double> metal(double ome) {
 		    i++;
 		    if(t*1.e+12/omep >= tpump && pip ==0) {
 				tildeN =1.;
-// 				GG = set_GG(G, tau2);
 				pip = 1.;
+				if (ns == 1) {
+					po  = numerical_output(E0, q, p0);
+					N   = Runge_Kutta_mono_4 (N, -1./tau1, tildeN/tau1+imag(q[0]*conj(po)), dt);
+					} else N = 1;
 				}
-		    if (ns == 1) {
-				po  = numerical_output(E0, q, p0);
-				N   = Runge_Kutta_mono_4 (N, -1./tau1, tildeN/tau1+imag(q[0]*conj(po)), dt);
-				} else N = 1;
 		    A   = coefficients(OmeH, OmeP, GG*N, GamP, p0, p1, p2); 
 		    B   = inhomogeneous(GG*N, GamP, E0, p0, p1, p2);
 		    q   = Runge_Kutta_4 (q, A, B, dt);
@@ -1038,8 +1032,7 @@ std::complex<double> metal(double ome) {
 		dt  = 1.;
 		std::complex<double> *q, *qss, *kap, **EVE, *C;
 		
-		q   = new std::complex<double>[3];
-		for(int i = 0; i <= 1; i++) q[i] = std::complex<double> (0., 0.);
+		q = new std::complex<double>[3]{0.0, 0.0, 0.0};  // PDF order, fully initialized
 		
 		qss = new std::complex<double>[3];
 		kap = new std::complex<double>[3];		
