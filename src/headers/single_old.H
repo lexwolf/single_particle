@@ -17,6 +17,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+ #include <complex>
+
 inline std::complex<double>* pcfc0(std::complex <double> eps_inf, double eps_b, double eps_s=0, double rho=0){
       auto* p = new std::complex<double>[4];
       p[0] = -1./(eps_inf+2.*eps_b);

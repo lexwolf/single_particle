@@ -1,6 +1,24 @@
-/* single_revised.H
+/*
+ * This file is part of the Quasi-Static Time-Dynamic Project.
+ * 
+ * Copyright (C) 2025 Alessandro Veltri
  *
- * PDF-consistent (Eq. 42–43) ordering: (0,1,2) == (metal, gain-q1, gain-q2)
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+
+/* PDF-consistent (Eq. 42–43) ordering: (0,1,2) == (metal, gain-q1, gain-q2)
  *
  * Normalization note:
  * - This header keeps the "epsilon0-free" normalization used in your C++ code.
@@ -27,8 +45,8 @@
  * so numerical_output(E0, q, p) gives p2(t) if q is in PDF order.
  */
 
-#ifndef SINGLE_REVISED_H
-#define SINGLE_REVISED_H
+#ifndef SINGLE_H
+#define SINGLE_H
 
 #include <complex>
 
