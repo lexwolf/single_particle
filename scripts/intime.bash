@@ -37,6 +37,8 @@ if [ ! -f "$infile" ]; then
   exit 1
 fi
 
+mkdir -p ../img/GIF/intime
+
 if $use_compile; then
   echo "> Compiling selected sources..."
   # Always compile steady-state and frohlich
@@ -131,8 +133,9 @@ do
     mv ../img/intime.pdf ../img/${file[$j]}/pdf/im-${name}.pdf
     mv ../img/intime.png ../img/${file[$j]}/png/im-${name}.png
   done
-  echo "> Creating ${file[$j]}.gif ..."
+  echo "> Creating ${file[$j]}.gif in ../img/GIF/intime ..."
   convert -dispose previous -delay 20 ../img/${file[$j]}/png/*.png -loop 0 ../img/${file[$j]}.gif
+  mv ../img/${file[$j]}.gif ../img/GIF/intime
   echo "> done!"
 done
 

@@ -1,12 +1,22 @@
 # Ignore everything inside data/output and img and bin
 data/output/*
+data/output/oGp/*
 img/*
+img/oGp/*
+img/oGp/pdf/*
+img/GIF/*
+img/alp_p3_emi/*
 bin/*
 data/input/*.bak
 
 # But track the directories themselves
 !data/output/.gitkeep
+!data/output/oGp/.gitkeep
 !img/.gitkeep
+!img/oGp/.gitkeep
+!img/oGp/pdf/.gitkeep
+!img/GIF/.gitkeep
+!img/alp_p3_emi/.gitkeep
 !bin/.gitkeep
 
 # Ignore *.o and *.so files
