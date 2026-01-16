@@ -90,9 +90,9 @@ inline std::complex<double>** coefficients(std::complex<double> OmeG,
                                            std::complex<double> GamGxN,
                                            std::complex<double> GamM,
                                            std::complex<double>* p0,
-                                           std::complex<double>* /*p1*/ = nullptr,
-                                           std::complex<double>* /*p2*/ = nullptr,
-                                           int /*J*/ = 0)
+                                           std::complex<double>* p1 = nullptr,
+                                           std::complex<double>* p2 = nullptr,
+                                           int J = 0)
 {
     // p0 = {p00, p01, p02, p23}
     auto** A = new std::complex<double>*[3];
@@ -124,8 +124,8 @@ inline std::complex<double>* inhomogeneous(std::complex<double> GamGxN,
                                           std::complex<double> GamM,
                                           double E0,
                                           std::complex<double>* p0,
-                                          std::complex<double>* /*p1*/ = nullptr,
-                                          std::complex<double>* /*p2*/ = nullptr)
+                                          std::complex<double>* p1 = nullptr,
+                                          std::complex<double>* p2 = nullptr)
 {
     // p0 = {p00, p01, p02, p23}
     auto* B = new std::complex<double>[3];
