@@ -329,7 +329,7 @@ std::complex<double> metal(double ome) {
 	return reso;
 	}
 
-    std::complex<double> set_GG(double G, double tau2){
+    std::complex<double> set_GamG(double G, double tau2){
 		std::complex<double> GamG;
 		GamG   = -img*fabs(G)/tau2;
 		return GamG;
@@ -400,7 +400,7 @@ std::complex<double> metal(double ome) {
 //         tau2 = nv[1];
 //         gamd = nv[2];
 //         ome0 = nv[3];
-//         GamG   = set_GG(G, tau2);
+//         GamG   = set_GamG(G, tau2);
 // 
 //         
 //         for (omi=0; omi<=omeN; omi++){
@@ -588,7 +588,7 @@ std::complex<double> metal(double ome) {
 		tau2 = nv[1];
 		gamd = nv[2];
 		ome0 = nv[3];
-		GamG = set_GG(G, tau2);
+		GamG = set_GamG(G, tau2);
 
 	    for (omi=0; omi<=omeN; omi++){
 		omeeV = omemi + omi*dome;
@@ -808,7 +808,7 @@ std::complex<double> metal(double ome) {
 		tau2 = nv[1];
 		gamd = nv[2];
 		ome0 = nv[3];
-		GamG = set_GG(G, tau2);
+		GamG = set_GamG(G, tau2);
 		metal(omeeV); //needed to calculate ceps_inf
 		p0 = pcfc0(ceps_inf, eps_b, eps_s, rho);
 		p1 = pcfc1(ceps_inf, eps_b, eps_s, rho);
@@ -847,7 +847,7 @@ std::complex<double> metal(double ome) {
 		if(Nt > 50000) Nprint=50000;    
 // 		if(Nt > 500000) Nprint=500000;    
 		int iprint=Nt/Nprint;
-		GamG = set_GG(G, tau2);
+		GamG = set_GamG(G, tau2);
 		// let's begin without pump
 		tildeN = 0;
 	    
@@ -999,7 +999,7 @@ std::complex<double> metal(double ome) {
 		tau2 = nv[1];
 		gamd = nv[2];
 		ome0 = nv[3];
-		GamG = set_GG(G, tau2);
+		GamG = set_GamG(G, tau2);
 		metal(omeeV); //needed to calculate ceps_inf
 		p0 = pcfc0(ceps_inf, eps_b, eps_s, rho);
 		p1 = pcfc1(ceps_inf, eps_b, eps_s, rho);
@@ -1050,7 +1050,7 @@ std::complex<double> metal(double ome) {
 		// let's begin without pump
 		tildeN = 0;
 		N      = 0;
-		GamG  = set_GG(G*N, tau2);; 
+		GamG  = set_GamG(G*N, tau2);; 
 		A   = coefficients(OmeG, OmeM, GamG, GamM, p0, p1, p2); 
 		B   = inhomogeneous(GamG, GamM, E0, p0, p1, p2);
 		qss = steady_state_solution(A, B);
@@ -1067,7 +1067,7 @@ std::complex<double> metal(double ome) {
 			tildeN = 1.;
 			t0  = t;
 			pip = 1.;
-			GamG  = set_GG(G*tildeN, tau2);
+			GamG  = set_GamG(G*tildeN, tau2);
 			A   = coefficients(OmeG, OmeM, GamG, GamM, p0, p1, p2);
 			kap = eigenvalues(A);
 			EVE = eigenvectors(A);
