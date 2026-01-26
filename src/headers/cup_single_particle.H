@@ -1,12 +1,21 @@
 /*
- * Unified cup.H for both nanoshell and single-particle projects.
+ * This file is part of the Quasi-Static Time-Dynamic Project.
+ * 
+ * Copyright (C) 2025 Alessandro Veltri
  *
- * Default Frohlich mode: OPTIMAL (omega21 = omega).
- * Self-consistent and current modes remain available.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-
-#ifndef CUP_H
-#define CUP_H
 
 #include <complex>
 #include <math.h>
@@ -18,19 +27,6 @@
 #define REAL(z,i) ((z)[2*(i)])
 #define IMAG(z,i) ((z)[2*(i)+1])
 #include <vector>
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <cstdlib>
-#include <cmath>
-#include <limits>
-
-using std::complex;
-using std::conj;
-using std::imag;
-using std::real;
-using std::norm;
-
 
 #define cc  299792458.
 /** c [m/s] Speed of light **/
@@ -50,22 +46,6 @@ double eV2nm(double ome){
   lam=cc/(ome*eV2j/h)*1.e9;
   return lam;
   }
-
-// Joule heating proxy (single metal sphere only for now).
-// Returns quantity proportional to ∫_metal ω Im{ Π~_m · E*_m } dV.
-// For ns==1 (nanoshell), returns NaN until full shell-volume integral is implemented.
-inline double joule_heating(int ns,
-                            double ome,
-                            const std::complex<double>& p0,
-                            const std::complex<double>& q0)
-{
-  if (ns != 0) {
-    // TODO(nanoshell): implement metal-shell integral from r=rho*a to r=a,
-    // including angular P2(cosθ) terms and radial weights ~ (a^3/r^3), (a^6/r^6).
-    return std::numeric_limits<double>::quiet_NaN();
-  }
-  return 0.5 * ome * std::imag(std::conj(p0) * q0);
-}
 
 class nanosphere{
 	gsl_interp_accel *acc;
@@ -217,13 +197,12 @@ class nanosphere{
 	  double eps_0;
 	  if(strcmp(hst,"silica")==0) eps_0 = 2.1316; // Si02
 	  else if(strcmp(hst,"solgel")==0) eps_0 = 2.1331;//3.8
-	  else if(strcmp(hst,"vacuum")==0) eps_0 = 1.0;
 	  else if(strcmp(hst,"water")==0) eps_0 = 1.7689;
 	  else if(strcmp(hst,"glass")==0) eps_0 = 1.2247;
 	  else if(strcmp(hst,"PMMA")==0) eps_0 = 2.2201;
 	  else if(strcmp(hst,"ethanol")==0) eps_0 = 1.8496;//1.1662;
 	  else{
-		std::cout<<"option are: silica, solgel, vacuum, water, glass, PMMA, ethanol"<<std::endl;
+		std::cout<<"option are: silica, solgel, water, glass, PMMA, ethanol"<<std::endl;
 		exit(1);
 		}
 	  return eps_0;
@@ -274,114 +253,81 @@ std::complex<double> metal(double ome) {
       return eps;
     }
 
-    // -------------------------
-    // Frohlich threshold solvers
-    // -------------------------
-    // Modes:
-    //  - CUP_FROHLICH_OPTIMAL:        omega21 = omega (optimal coherence)
-    //  - CUP_FROHLICH_CURRENT:        omega21 = omega_0 (current/linearized)
-    //  - CUP_FROHLICH_SELF_CONSISTENT:omega21 = omega_sp (self-consistent)
-    //
-    // Default mode can be controlled at compile time via CUP_DEFAULT_FROHLICH_MODE.
-
-#ifndef CUP_FROHLICH_OPTIMAL
-#define CUP_FROHLICH_OPTIMAL 0
-#endif
-#ifndef CUP_FROHLICH_CURRENT
-#define CUP_FROHLICH_CURRENT 1
-#endif
-#ifndef CUP_FROHLICH_SELF_CONSISTENT
-#define CUP_FROHLICH_SELF_CONSISTENT 2
-#endif
-#define CUP_DEFAULT_FROHLICH_MODE CUP_FROHLICH_OPTIMAL
-
-    double *frohlich(double a0, double b0, double eps_b, double eps_s=0, double rap=0, int mode=CUP_DEFAULT_FROHLICH_MODE){
-        static double reso[2] = {};
-        double ome_sp = 0.0, Gth = 0.0;
-        double eqn9_A, eqn9_D, a, b, d;
-        const double e = 1.e-10;
-        const double rap3 = rap*rap*rap;
-
-        std::complex<double> eps1_A, eps1_D, F_A, F_D;
-
-        auto bisect = [&](double ome21)->void {
-            a = a0; b = b0;
-            while (fabs(a-b) >= e){
-                d = 0.5*(a+b);
-
-                eps1_A = metal(a);
-                F_A    = F(eps1_A, eps_s, rap3);
-                eqn9_A = eqn9(a, ome21, F_A, eps_b, Dome);
-
-                eps1_D = metal(d);
-                F_D    = F(eps1_D, eps_s, rap3);
-                eqn9_D = eqn9(d, ome21, F_D, eps_b, Dome);
-
-                if (eqn9_D * eqn9_A <= 0.) b = d;
-                else                       a = d;
-            }
-            ome_sp = d;
-        };
-
-        if (mode == CUP_FROHLICH_OPTIMAL){
-            // omega21 = omega, so at each bisection point use ome21 = current omega (d)
-            // This can be implemented by passing ome21=d to eqn9, which is already done in eqn9(...) call
-            // via bisect(d). We mimic the original behavior by reusing the same structure:
-            a = a0; b = b0;
-            while (fabs(a-b) >= e){
-                d = 0.5*(a+b);
-
-                eps1_A = metal(a);
-                F_A    = F(eps1_A, eps_s, rap3);
-                eqn9_A = eqn9(a, a, F_A, eps_b, Dome);
-
-                eps1_D = metal(d);
-                F_D    = F(eps1_D, eps_s, rap3);
-                eqn9_D = eqn9(d, d, F_D, eps_b, Dome);
-
-                if (eqn9_D * eqn9_A <= 0.) b = d;
-                else                       a = d;
-            }
-            ome_sp = d;
-            Gth = -Dome*imag(F_D)/Dome;
-        }
-        else if (mode == CUP_FROHLICH_CURRENT){
-            // omega21 = omega_0
-            const double ome21 = ome_0;
-            bisect(ome21);
-            // Keep the historical formula you used in single_particle:
-            Gth = 2.*(ome_sp-ome_0)*(real(F_D)-eps_b) - Dome*imag(F_D)/Dome;
-        }
-        else if (mode == CUP_FROHLICH_SELF_CONSISTENT){
-            // omega21 is repositioned to omega_sp until convergence
-            double ome_sm = 666.;
-            ome_sp = 0.5*(b0+a0);
-            while (fabs(ome_sp - ome_sm) > 1.e-20){
-                const double ome21 = ome_sp;
-                bisect(ome21);
-                ome_sm = ome_sp;
-                // ome_sp updated by bisect
-            }
-            Gth = -Dome*imag(F_D)/Dome;
-        }
-        else{
-            std::cerr << "Error: unknown Frohlich mode = " << mode << std::endl;
-            std::exit(EXIT_FAILURE);
-        }
-
-        reso[0] = ome_sp;
-        reso[1] = Gth;
-        return reso;
-    }
-
-    // Backward-compatible wrappers (keep older call sites working)
     double *frohlich_optimal(double a0, double b0, double eps_b, double eps_s=0, double rap=0){
-        return frohlich(a0, b0, eps_b, eps_s, rap, CUP_FROHLICH_OPTIMAL);
-    }
+	static double reso[2]={};
+	double ome_sp, Gth;
+	double eqn9_A, eqn9_D, a, b, d, e;    //declare some needed variables
+	double rap3=rap*rap*rap;
+	std::complex<double> eps1_A, eps1_B, eps1_D, F_A, F_B, F_D;
+	e = 1.e-10;
+	a=a0;
+	b=b0;
+	
+	while (fabs(a-b)>=e){   /*if the mod of a-b is greater than the accuracy desired keep bisecting the interval*/
+	    
+	    d=0.5*(a+b);        //bisect the interval and find the value of c
+	    eps1_A = metal(a);
+	    F_A = F(eps1_A, eps_s, rap3);
+	    eqn9_A = eqn9(a, a, F_A, eps_b, Dome);
+
+	    eps1_D = metal(d);
+	    F_D = F(eps1_D, eps_s, rap3);
+	    eqn9_D = eqn9(d, d, F_D, eps_b, Dome);        
+
+	    if (eqn9_D*eqn9_A<=0.){    
+		b=d;    
+		}
+	    else{
+		a=d;
+		}
+	    }
+	ome_sp   = d;
+	Gth = -Dome*imag(F_D)/Dome;
+	
+	reso[0]=ome_sp;
+	reso[1]=Gth;
+	
+	return reso;
+	}
 
     double *frohlich_current(double a0, double b0, double eps_b, double eps_s=0, double rap=0){
-        return frohlich(a0, b0, eps_b, eps_s, rap, CUP_FROHLICH_CURRENT);
-    }
+	static double reso[2]={};
+	double ome_sp, Gth;
+	double eqn9_A, eqn9_D, a, b, d, e;    //declare some needed variables
+	double rap3=rap*rap*rap;
+	std::complex<double> eps1_A, eps1_B, eps1_D, F_A, F_B, F_D;
+	e = 1.e-10;
+	double ome21=ome_0;
+	a=a0;
+	b=b0;
+	ome_sp =.5*(b0+a0);
+	while (fabs(a-b)>=e){   /*if the mod of a-b is greater than the accuracy desired keep bisecting the interval*/
+	    
+	    d=0.5*(a+b);        //bisect the interval and find the value of c
+
+	    eps1_A = metal(a);
+	    F_A = F(eps1_A, eps_b, rap3);
+	    eqn9_A = eqn9(a, ome21, F_A, eps_b, Dome);
+
+	    eps1_D = metal(d);
+	    F_D = F(eps1_D, eps_b, rap3);
+	    eqn9_D = eqn9(d, ome21, F_D, eps_b, Dome);        
+
+	    if (eqn9_D*eqn9_A<=0.){    
+		b=d;    
+		}
+	    else{
+		a=d;    
+		}
+	    }
+	ome_sp   = d;
+	Gth = 2.*(ome_sp-ome_0)*(real(F_D)-eps_b)-Dome*imag(F_D)/Dome;
+	
+	reso[0]=ome_sp;
+	reso[1]=Gth;
+	
+	return reso;
+	}
 
     std::complex<double> set_GamG(double G, double tau2){
 		std::complex<double> GamG;
@@ -910,16 +856,14 @@ std::complex<double> metal(double ome) {
 		while (i<=Nt){// && (fabs(norm(dip)-dnormem)> 1.e-20 || t*1.e+12/omep<12*tpump)){
 		    t=i*dt;
 		    i++;
-		    if(t*1.e+12/omep >= tpump && pip == 0) {
-				tildeN = 1.;
+		    if(t*1.e+12/omep >= tpump && pip ==0) {
+				tildeN =1.;
 				pip = 1.;
-		    }
-		    if (ns == 1) {
-				po  = numerical_output(E0, q, p0);
-				N   = Runge_Kutta_mono_4(N, -1./tau1, tildeN/tau1 + imag(q[0]*conj(po)), dt);
-		    } else {
-				N = 1;
-		    }
+				if (ns == 1) {
+					po  = numerical_output(E0, q, p0);
+					N   = Runge_Kutta_mono_4 (N, -1./tau1, tildeN/tau1+imag(q[0]*conj(po)), dt);
+					} else N = 1;
+				}
 		    A   = coefficients(OmeG, OmeM, GamG*N, GamM, p0, p1, p2); 
 		    B   = inhomogeneous(GamG*N, GamM, E0, p0, p1, p2);
 		    q   = Runge_Kutta_4 (q, A, B, dt);
@@ -940,7 +884,7 @@ std::complex<double> metal(double ome) {
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<N<<              // 6 N
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(dip-E0)<<    // 7 Re(p0)
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<imag(dip-E0)<<    // 8 Im(p0)
-					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<joule_heating(ns, ome, (dip-E0), q[2])<<    // 9 Q
+					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<0.5*ome*imag(conj(dip-E0)*q[2])<<    // 9 Q
 					std::endl;
 				fnct<<"  "<<std::setw(8)<<std::setiosflags (std::ios::left)<<t/omep*1.e+12<< // 1 time (ps)
 					"\t"<<std::setw(13)<<std::setiosflags (std::ios::left)<<real(q[0])<<   // 2 Re(q0)
@@ -1075,7 +1019,7 @@ std::complex<double> metal(double ome) {
 		chiH = -GamG/OmeG;
 		chiP = -GamM/OmeM;
 
-		eps1e = ceps_inf + chiP;
+		eps1e = eps_inf + chiP;
 		eps2e = eps_b   + chiH;
 
 		// coefficients of the differential system of equations
@@ -1175,5 +1119,3 @@ std::complex<double> metal(double ome) {
 		return dip;
 		}
 	};
-
-#endif // CUP_H

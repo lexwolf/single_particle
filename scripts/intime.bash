@@ -42,13 +42,13 @@ mkdir -p ../img/GIF/intime
 if $use_compile; then
   echo "> Compiling selected sources..."
   # Always compile steady-state and frohlich
-  g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/steady_state.cxx -o ../bin/sts -lgsl -lgslcblas -lm -larmadillo
-  g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/frohlich.cxx -o ../bin/fro -lgsl -lgslcblas -lm -larmadillo
+  g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/steady_state.cxx -o ../bin/sts -lgsl -lgslcblas -lm -larmadillo
+  g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/frohlich.cxx -o ../bin/fro -lgsl -lgslcblas -lm -larmadillo
   # Compile time-dependent module depending on plot mode
   if [ "$plot_mode" == "num" ]; then
-    g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/num_time.cxx -o ../bin/num -lgsl -lgslcblas -lm -larmadillo
+    g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/num_time.cxx -o ../bin/num -lgsl -lgslcblas -lm -larmadillo
   elif [ "$plot_mode" == "anl" ]; then
-    g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/anl_time.cxx -o ../bin/anl -lgsl -lgslcblas -lm -larmadillo
+    g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/anl_time.cxx -o ../bin/anl -lgsl -lgslcblas -lm -larmadillo
   else
     echo "Warning: No time-dependency mode selected. Skipping time-code compilation."
   fi

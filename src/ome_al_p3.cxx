@@ -21,13 +21,15 @@
 #include <iomanip>
 #include <fstream>
 #include <armadillo>
-#include "headers/math33.H"
+#include "headers/mathNN.H"
+#include "headers/extract.H"
 #include "headers/single.H"
 #include "headers/cup.H"
-#include "headers/extract.H"
+#include "headers/Zx_tools.H"
+
 
 /*
-g++ -Wall -I/usr/include/ -L/usr/local/lib ../src/ome_al_p3.cxx -o ../bin/oap -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/ome_al_p3.cxx -o ../bin/oap -lgsl -lgslcblas -lm -larmadillo
 */
         
 using namespace std;
@@ -71,16 +73,16 @@ int main(){
     
     valph = ns.steady_state(mdl, mtl, sol, omemi, omema, omeN);
 
-    ralph = extract_ralph(valph);
-    ialph = extract_ialph(valph);
-    vome  = extract_ome(valph);
+    ralph = extract_rZ(valph);
+    ialph = extract_iZ(valph);
+    vome  = extract_x(valph);
 
     rzero = find_zeros(vome, ralph);
     izero = find_zeros(vome, ialph);
 
     vkape = ns.vkap;// ns.eigen_values(mdl, mtl, sol, omemi, omema, omeN);    
 
-    kzero = fnd_extrm(vkape, ns.Ome_p);
+    kzero = find_extrema(vkape, ns.Ome_p);
     
     kex1 = kzero.first;
     kex2 = kzero.second;

@@ -21,13 +21,14 @@
 #include <iomanip>
 #include <fstream>
 #include <armadillo>
-#include "headers/math33.H"
+#include "headers/mathNN.H"
 #include "headers/single.H"
 #include "headers/cup.H"
+#include "headers/Zx_tools.H"
 #include "headers/extract.H"
 
 /*
-g++ -Wall -I/usr/include/ -L/usr/local/lib ../src/omeG_p3.cxx -o ../bin/oGp -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/omeG_p3.cxx -o ../bin/oGp -lgsl -lgslcblas -lm -larmadillo
 */
 
 using namespace std;
@@ -90,16 +91,16 @@ int main(){
 
         valph = ns.steady_state(mdl, mtl, sol, omemi, omema, omeN);
 
-        ralph = extract_ralph(valph);
-        ialph = extract_ialph(valph);
-        vome  = extract_ome(valph);
+        ralph = extract_rZ(valph);
+        ialph = extract_iZ(valph);
+        vome  = extract_x(valph);
 
         rzero = find_zeros(vome, ralph);
         izero = find_zeros(vome, ialph);
 
         vkape = ns.vkap; //ns.eigen_values(mdl, mtl, sol, omemi, omema, omeN);    
         
-        kzero = fnd_extrm(vkape, ns.Ome_p);
+        kzero = find_extrema(vkape, ns.Ome_p);
         
         kex1 = kzero.first;
         kex2 = kzero.second;
@@ -131,7 +132,7 @@ int main(){
     for (int i = 0; i < int(visoa.size()); i += 2) {
         tmp.push_back(visoa[i]);
         }
-    sort(tmp.begin(), tmp.end(), compareSecond);
+    sort(tmp.begin(), tmp.end(), compare_by_abs_second);
     for (int i = 1; i < int(visoa.size()); i += 2) {
         tmp.push_back(visoa[i]);
         }
@@ -142,7 +143,7 @@ int main(){
     for (int i = 0; i < int(visok.size()); i += 2) {
         tmp.push_back(visok[i]);
         }
-    sort(tmp.begin(), tmp.end(), compareSecond);
+    sort(tmp.begin(), tmp.end(), compare_by_abs_second);
     for (int i = 1; i < int(visok.size()); i += 2) {
         tmp.push_back(visok[i]);
         }

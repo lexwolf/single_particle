@@ -21,13 +21,13 @@
 #include <iomanip>
 #include <fstream>
 #include <armadillo>
-#include "headers/math33.H"
+#include "headers/mathNN.H"
 #include "headers/single.H"
 #include "headers/cup.H"
 
 
 /*
-g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/anl_time.cxx -o ../bin/anl -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/anl_time.cxx -o ../bin/anl -lgsl -lgslcblas -lm -larmadillo
 */
 
 using namespace std;

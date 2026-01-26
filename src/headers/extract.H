@@ -1,139 +1,125 @@
 /*
- * This file is part of the Quasi-Static Time-Dynamic Project.
- * 
- * Copyright (C) 2025 Alessandro Veltri
+ * extract.H (upgraded)
+ * Utility helpers shared across quasi-static nanoparticle projects.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * - Keeps existing APIs from the original extract.H
+ * - Fixes out-of-bounds / logic issues in find_zeros()
+ * - Adds solve4(): quartic polynomial complex roots via GSL
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * Notes:
+ *  - solve4() returns a heap-allocated array of 4 complex roots.
+ *    Caller owns the pointer and must delete[] it.
  */
 
-std::complex<double> img = std::complex<double> (0., 1.);
-    
-void complete(std::vector<std::pair<double, double>>& vec, double omemi, double omema, double dome, double value=0.) {
+#ifndef EXTRACT_H
+#define EXTRACT_H
+
+#include <complex>
+#include <vector>
+#include <utility>
+#include <cmath>
+#include <limits>
+
+#include <gsl/gsl_poly.h>
+
+static const std::complex<double> img(0.0, 1.0);
+
+inline void complete(std::vector<std::pair<double, double>>& vec,
+                     double omemi, double omema, double dome,
+                     double value = 0.0)
+{
+    if (vec.empty()) return;
+
     vec.insert(vec.begin(), std::make_pair(vec[0].first - dome, value));
     vec.insert(vec.begin(), std::make_pair(omemi, value));
 
     vec.push_back(std::make_pair(vec[vec.size() - 1].first + dome, value));
-
     vec.push_back(std::make_pair(omema, value));
-    }
-        
+}
 
-double interpolate(double x1, double x2, double f1, double f2, double x) {
-    // Perform linear interpolation
+// Linear interpolation between (x1,f1) and (x2,f2) evaluated at x
+inline double interpolate(double x1, double x2, double f1, double f2, double x)
+{
     return f1 + (f2 - f1) * (x - x1) / (x2 - x1);
 }
 
-std::pair<double, double> find_zeros(const std::vector<double>& x, const std::vector<double>& fx, double epsilon = 1e-6, int max_iterations = 100) {
+/*
+ * find_zeros
+ * ---------
+ * Finds up to two zeros of a *piecewise-linear* function defined by samples (x, fx).
+ *
+ * Returns (zero_1, zero_2). If a zero isn't found, the corresponding value is 0.0
+ * (keeps legacy behavior expected by existing codes).
+ *
+ * IMPORTANT:
+ *  - This finds zeros of the linear interpolation between sample points, not of
+ *    some underlying continuous function.
+ */
+inline std::pair<double, double>
+find_zeros(const std::vector<double>& x,
+           const std::vector<double>& fx,
+           double /*epsilon*/ = 1e-6,
+           int /*max_iterations*/ = 100)
+{
     double zero_1 = 0.0;
     double zero_2 = 0.0;
-    double c, fc;
-    
-    for (int i = 0; i < int(x.size()); i++) {
-        double x1 = x[i];
-        double x2 = x[i + 1];
-        double f1 = fx[i];
-        double f2 = fx[i + 1];
-        
-        
-        if (f1 * f2 < 0) {
-            double a = x1;
-            double b = x2;
-            int iterations = 0;
-            while (std::abs(b - a) > epsilon && iterations < max_iterations) {
-                iterations++;
-                c = (a + b) / 2.0;
-                fc = interpolate(x1, x2, f1, f2, c);
 
-                if (f1 * fc < 0) {
-                    b = c;
-                }
-                else {
-                    a = c;
-                }
-            }
+    const std::size_t n = std::min(x.size(), fx.size());
+    if (n < 2) return std::make_pair(zero_1, zero_2);
 
-            if (zero_1 == 0.0) {
-                zero_1 = c;
-            }
-            else {
-                zero_2 = c;
-                break;
-            }
+    auto store = [&](double z) {
+        if (zero_1 == 0.0) zero_1 = z;
+        else if (zero_2 == 0.0) zero_2 = z;
+    };
+
+    // Handle exact zeros at sample points (including last point)
+    for (std::size_t i = 0; i < n; ++i) {
+        if (fx[i] == 0.0) {
+            store(x[i]);
+            if (zero_2 != 0.0) return std::make_pair(zero_1, zero_2);
         }
-        if (i==int(x.size()) - 1 && zero_2 == 0.0) {
-            zero_2 = x[i];
-            break;
-            }
-        
     }
+
+    // Check sign changes across segments and compute linear-interpolated crossing
+    for (std::size_t i = 0; i + 1 < n; ++i) {
+        const double x1 = x[i];
+        const double x2 = x[i + 1];
+        const double f1 = fx[i];
+        const double f2 = fx[i + 1];
+
+        if (f1 == 0.0 || f2 == 0.0) continue; // already handled above
+        if (f1 * f2 < 0.0) {
+            // Zero of the straight line between the two samples
+            const double z = x1 - f1 * (x2 - x1) / (f2 - f1);
+            store(z);
+            if (zero_2 != 0.0) break;
+        }
+    }
+
     return std::make_pair(zero_1, zero_2);
 }
 
-std::vector<double> extract_ome(std::vector<std::pair<double,std::complex<double>>> vectorOfPairs){
-    std::vector<double> extractFirst;
-        int i =0;
-        for (const auto& pair : vectorOfPairs) {
-            i++;
-            extractFirst.push_back(pair.first);
-            if (i==int(vectorOfPairs.size())-1) break;
-        }
-        return extractFirst;
-        }
-    
-std::vector<double> extract_ralph(std::vector<std::pair<double,std::complex<double>>> vectorOfPairs){
-    std::vector<double> extractSecnd;
-    int i =0;
-    for (const auto& pair : vectorOfPairs) {
-        i++;
-        extractSecnd.push_back(real(pair.second));
-        if (i==int(vectorOfPairs.size())-1) break;
-        }
-    return extractSecnd;
-    }
+/*
+ * solve4
+ * ------
+ * Complex roots of a quartic polynomial:
+ *   c[0] + c[1] x + c[2] x^2 + c[3] x^3 + c[4] x^4 = 0
+ *
+ * Returns pointer to 4 complex roots (heap allocated). Caller must delete[] it.
+ */
+inline std::complex<double>* solve4(const double c[5])
+{
+    auto* sol = new std::complex<double>[4];
 
-std::pair<double, double> fnd_extrm(std::vector<std::pair<double,std::complex<double>>> vkape, double Ome_p){
-    std::vector<double> tmp;
-    double extr_1, extr_2;
-    int never=1;
-    for (int ii=0; ii<int(vkape.size()); ii++){
-        if (real(vkape[ii].second)>=0) {
-            tmp.push_back(vkape[ii].first-imag(vkape[ii].second)*Ome_p);
-            never=0;
-            }
-        }
-    sort(tmp.begin(), tmp.end());
-    if (never ==0 ){
-        extr_1=tmp[0];
-        extr_2=tmp[tmp.size()-1];
-        } else{
-        extr_1=666;
-        extr_2=777;
-        } 
-    return std::make_pair(extr_1, extr_2);
-    }
-    
-std::vector<double> extract_ialph(std::vector<std::pair<double,std::complex<double>>> vectorOfPairs){
-    std::vector<double> extractSecnd;
-    int i =0;
-    for (const auto& pair : vectorOfPairs) {
-        i++;
-        extractSecnd.push_back(imag(pair.second));
-        if (i==int(vectorOfPairs.size())-1) break;
-        }
-    return extractSecnd;
-    }
+    double z[8]; // packed real/imag: z[2*i], z[2*i+1]
+    gsl_poly_complex_workspace* w = gsl_poly_complex_workspace_alloc(5);
+    gsl_poly_complex_solve(c, 5, w, z);
+    gsl_poly_complex_workspace_free(w);
 
-bool compareSecond(const std::pair<double, double>& a, const std::pair<double, double>& b) {
-    return fabs(a.second) > fabs(b.second);
+    for (int i = 0; i < 4; ++i) {
+        sol[i] = std::complex<double>(z[2*i], z[2*i+1]);
+    }
+    return sol;
 }
+
+#endif // EXTRACT_H

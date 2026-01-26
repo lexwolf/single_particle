@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib
+CFLAGS = -Wall -I/usr/include/ -I/usr/include/eigen3 -I/usr/include/eigen3 -L/usr/local/lib
 LIBS = -lgsl -lgslcblas -lm -larmadillo
 
 BIN_DIR = bin

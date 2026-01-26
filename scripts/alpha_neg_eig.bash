@@ -34,9 +34,9 @@ fi
 # Compile the codes if requested
 if $use_compile; then
   echo "> Compiling codes..."
-  g++ -Wall -I/usr/local/include -L/usr/local/lib ../src/frohlich.cxx -o ../bin/sfr -lgsl -lgslcblas -lm -larmadillo
-  g++ -Wall -I/usr/include/ -L/usr/local/lib ../src/ome_al_p3.cxx -o ../bin/oap -lgsl -lgslcblas -lm -larmadillo
-  g++ -Wall -I/usr/include/ -L/usr/local/lib ../src/omeG_p3.cxx -o ../bin/oGp -lgsl -lgslcblas -lm -larmadillo
+  g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/frohlich.cxx -o ../bin/sfr -lgsl -lgslcblas -lm -larmadillo
+  g++ -Wall -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/ome_al_p3.cxx -o ../bin/oap -lgsl -lgslcblas -lm -larmadillo
+  g++ -Wall -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/omeG_p3.cxx -o ../bin/oGp -lgsl -lgslcblas -lm -larmadillo
   echo "> ...Done!"
 fi
 
