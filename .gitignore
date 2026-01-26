@@ -22,3 +22,8 @@ data/input/*.bak
 # Ignore *.o and *.so files
 src/*.o
 
+# Editor swap / temp files
+*.swp
+*.swo
+*.kate-swp
+.*.kate-swp
