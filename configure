@@ -24,12 +24,6 @@ if ! ldconfig -p | grep "libarmadillo.so" &> /dev/null; then
   exit 1
 fi
 
-echo "Checking for complex_bessel..."
-if ! ldconfig -p | grep "libcomplex_bessel.so" &> /dev/null; then
-  echo "Error: Library complex_bessel not found. Please install it."
-  exit 1
-fi
-
 echo "Checking for gsl..."
 if ! ldconfig -p | grep "libgsl.so" &> /dev/null; then
   echo "Error: Library gsl not found. Please install it."
