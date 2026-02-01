@@ -48,6 +48,9 @@
 #ifndef SINGLE_H
 #define SINGLE_H
 
+#define CUP_HAS_FROHLICH_GEOMETRY 1
+#define CUP_GEOMETRY_SINGLE 1
+
 #include <complex>
 
 // ------------------------------------------------------------
@@ -175,4 +178,4 @@ inline std::complex<double> numerical_output(double E0,
     return p[0]*q[0] + p[1]*q[1] + p[2]*q[2] + p[3]*E0;
 }
 
-#endif // SINGLE_REVISED_H
+#endif // SINGLE_H
