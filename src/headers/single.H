@@ -153,10 +153,10 @@ inline std::complex<double> F(std::complex<double> eps1, double /*eps3*/=0.0, do
     return -0.5 * eps1;
 }
 
-inline double eqn9(double ome, double ome0, std::complex<double> Fval, double eps_b, double Dome)
+inline double eqn9(double ome, double ome_g, std::complex<double> Fval, double eps_b, double Dome)
 {
     // Kept as in your original header
-    return Dome * (eps_b - std::real(Fval)) - 2.0 * (ome - ome0) * std::imag(Fval);
+    return Dome * (eps_b - std::real(Fval)) - 2.0 * (ome - ome_g) * std::imag(Fval);
 }
 
 inline std::complex<double> polarizability(std::complex<double> eps1, std::complex<double> eps2,

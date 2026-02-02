@@ -47,7 +47,7 @@ int main() {
         return 1;
     }
 
-    nano>>simulation.r1>>simulation.Dome>>simulation.ome_0>>simulation.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
+    nano>>simulation.r1>>simulation.Dome>>simulation.ome_g>>simulation.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
     
 
     // Inform the user about the test

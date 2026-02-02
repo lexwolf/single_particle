@@ -56,7 +56,7 @@ int main(int argc, char** argv){
     }
 
 
-    nano>>ns.r1>>ns.Dome>>ns.ome_0>>ns.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
+    nano>>ns.r1>>ns.Dome>>ns.ome_g>>ns.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
     time>>T>>tpump;    
     
     ns.init();
