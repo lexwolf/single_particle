@@ -48,7 +48,7 @@ int main(){
       std::cerr << "Error: Cannot open output file" << std::endl;
       return 1;
   }
-  nano>>ns.r1>>ns.Dome>>ns.ome_g>>ns.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
+  nano>>ns.a>>ns.Dome>>ns.ome_g>>ns.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
 
   ns.init();
   eps_b=ns.set_host(sol);

@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
         return 1;
     }
     
-    nano>>simulation.r1>>simulation.Dome>>simulation.ome_g>>simulation.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
+    nano>>simulation.a>>simulation.Dome>>simulation.ome_g>>simulation.G>>omemi>>omema>>mtl>>mdl>>active>>sol>>E0;
     time>>T>>tpump;  
         
     simulation.set_metal(mtl,mdl,1);

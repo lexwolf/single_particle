@@ -147,7 +147,7 @@ inline std::complex<double>* inhomogeneous(std::complex<double> GamGxN,
 // ------------------------------------------------------------
 // Convenience: same helpers you already had
 // ------------------------------------------------------------
-inline std::complex<double> F(std::complex<double> eps1, double /*eps3*/=0.0, double /*rap3*/=0.0)
+inline std::complex<double> F(std::complex<double> eps1, double /*eps3*/=0.0, double /*rho3*/=0.0)
 {
     // Kept as in your original header
     return -0.5 * eps1;
