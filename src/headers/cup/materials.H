@@ -215,18 +215,19 @@ return GamG;
 
 
 inline double * nanosphere::normalized_variables (){
-double *nv, tau1, tau2, gamd;
+double *nv, tau1, tau2, gamd, ome_g_norm;
 nv = new double[4];
 		
 tau2 = 2.*Ome_p/Dome;
 tau1 = 5.*tau2;
 
 gamd = .5*Gam_d/Ome_p;
+ome_g_norm = ome_g/Ome_p;
 
 nv[0] = tau1;
 nv[1] = tau2;
 nv[2] = gamd;
-nv[3] = ome_g/Ome_p;
+nv[3] = ome_g_norm;
 
 return nv;
 }
