@@ -80,7 +80,7 @@ int main(){
     rzero = find_zeros(vome, ralph);
     izero = find_zeros(vome, ialph);
 
-    vkape = ns.vkap;// ns.eigen_values(mdl, mtl, sol, omemi, omema, omeN);    
+    vkape = ns.vkap;
 
     kzero = find_extrema(vkape, ns.Ome_p);
     
