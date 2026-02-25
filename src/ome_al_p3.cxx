@@ -24,6 +24,7 @@
 #include "headers/mathNN.H"
 #include "headers/extract.H"
 #include "headers/single.H"
+#define CUP_BACKEND_QUASI_STATIC
 #include "headers/cup.H"
 #include "headers/Zx_tools.H"
 
