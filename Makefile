@@ -1,4 +1,5 @@
 CC = g++
+CXXFLAGS += -Iinclude
 CFLAGS = -Wall -I/usr/include/ -I/usr/include/eigen3 -I/usr/include/eigen3 -L/usr/local/lib
 LIBS = -lgsl -lgslcblas -lm -larmadillo
 
@@ -15,16 +16,16 @@ TARGETS = \
 all: $(TARGETS)
 
 $(BIN_DIR)/anl: $(SRC_DIR)/anl_time.cxx
-	$(CC) $(CFLAGS) $< -o $@ $(LIBS)
+	$(CC) $(CFLAGS) $(CXXFLAGS) $< -o $@ $(LIBS)
 
 $(BIN_DIR)/sgl: $(SRC_DIR)/single.cxx
-	$(CC) $(CFLAGS) $< -o $@ $(LIBS)
+	$(CC) $(CFLAGS) $(CXXFLAGS) $< -o $@ $(LIBS)
 
 $(BIN_DIR)/num: $(SRC_DIR)/num_time.cxx
-	$(CC) $(CFLAGS) $< -o $@ $(LIBS)
+	$(CC) $(CFLAGS) $(CXXFLAGS) $< -o $@ $(LIBS)
 
 $(BIN_DIR)/fro: $(SRC_DIR)/frohlich.cxx
-	$(CC) $(CFLAGS) $< -o $@ $(LIBS)
+	$(CC) $(CFLAGS) $(CXXFLAGS) $< -o $@ $(LIBS)
 
 clean:
 	rm -f $(BIN_DIR)/* $(SRC_DIR)/*.o

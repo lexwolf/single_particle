@@ -27,7 +27,7 @@
 #include "../src/headers/cup.H"
 
 /*
-g++ -Wall -I/usr/include/ -L/usr/local/lib threshold.cxx -o trs -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -Iinclude -I/usr/include/ -L/usr/local/lib threshold.cxx -o trs -lgsl -lgslcblas -lm -larmadillo
 */
 
 using namespace std;

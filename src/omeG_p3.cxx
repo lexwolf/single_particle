@@ -29,7 +29,7 @@
 #include "headers/extract.H"
 
 /*
-g++ -Wall -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/omeG_p3.cxx -o ../bin/oGp -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -Iinclude -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/omeG_p3.cxx -o ../bin/oGp -lgsl -lgslcblas -lm -larmadillo
 */
 
 using namespace std;

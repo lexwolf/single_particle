@@ -27,7 +27,7 @@
 #include "../src/headers/cup.H"
 
 /*
-g++ -Wall -I/usr/include/ -L/usr/local/lib time_behavior_Q.cxx -o timQ -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -Iinclude -I/usr/include/ -L/usr/local/lib time_behavior_Q.cxx -o timQ -lgsl -lgslcblas -lm -larmadillo
 */
 
 using namespace std;
