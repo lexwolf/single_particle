@@ -8,6 +8,10 @@ export LC_NUMERIC="en_US.UTF-8"
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 cd "$script_dir" || exit 1
+CXX=g++
+CXXFLAGS="-Wall -I../include -I/usr/local/include -I/usr/include/eigen3"
+LDFLAGS="-L/usr/local/lib"
+LIBS="-lgsl -lgslcblas -lm -larmadillo"
 
 compile_requested=false
 range_override=""
@@ -99,8 +103,8 @@ fi
 if [ "$compile_requested" = true ]; then
     echo
     echo "> Compiling codes..."
-    g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/frohlich.cxx -o ../bin/fro -lgsl -lgslcblas -lm -larmadillo
-    g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/steady_state.cxx -o ../bin/sts -lgsl -lgslcblas -lm -larmadillo
+    $CXX $CXXFLAGS ../src/frohlich.cxx -o ../bin/fro $LDFLAGS $LIBS
+    $CXX $CXXFLAGS ../src/steady_state.cxx -o ../bin/sts $LDFLAGS $LIBS
     echo "> ...Done!"
     echo
 fi

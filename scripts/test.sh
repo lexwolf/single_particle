@@ -14,6 +14,10 @@ BIN_DIR="$ROOT_DIR/bin"
 OUT_DIR="$ROOT_DIR/data/output"
 IMG_DIR="$ROOT_DIR/img"
 SCRIPTS_DIR="$ROOT_DIR/scripts"
+CXX=g++
+CXXFLAGS="-Wall -I$ROOT_DIR/include -I/usr/local/include -I/usr/include/eigen3"
+LDFLAGS="-L/usr/local/lib"
+LIBS="-lgsl -lgslcblas -lm -larmadillo"
 
 # --- sanity checks ---
 [[ -f "$INPUT_FILE" ]] || { echo "Error: input file not found: $INPUT_FILE" >&2; exit 1; }
@@ -50,17 +54,13 @@ write_input() {
 
 # --- compile ---
 echo "> Compiling selected sources..."
-g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib \
-  "$ROOT_DIR/src/frohlich.cxx" -o "$BIN_DIR/fro" -lgsl -lgslcblas -lm -larmadillo
+$CXX $CXXFLAGS $LDFLAGS "$ROOT_DIR/src/frohlich.cxx" -o "$BIN_DIR/fro" $LIBS
 
-g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib \
-  "$ROOT_DIR/src/steady_state.cxx" -o "$BIN_DIR/sts" -lgsl -lgslcblas -lm -larmadillo
+$CXX $CXXFLAGS $LDFLAGS "$ROOT_DIR/src/steady_state.cxx" -o "$BIN_DIR/sts" $LIBS
 
-g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib \
-  "$ROOT_DIR/src/num_time.cxx" -o "$BIN_DIR/num" -lgsl -lgslcblas -lm -larmadillo
+$CXX $CXXFLAGS $LDFLAGS "$ROOT_DIR/src/num_time.cxx" -o "$BIN_DIR/num" $LIBS
 
-g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib \
-  "$ROOT_DIR/src/anl_time.cxx" -o "$BIN_DIR/anl" -lgsl -lgslcblas -lm -larmadillo
+$CXX $CXXFLAGS $LDFLAGS "$ROOT_DIR/src/anl_time.cxx" -o "$BIN_DIR/anl" $LIBS
 echo "> Compilation complete."
 
 # --- run frohlich (passive resonance & threshold) ---
