@@ -22,7 +22,7 @@
 #include <fstream>
 #include <armadillo>
 #include "nano_geo_matrix/core/mathNN.hpp"
-#include "nano_geo_matrix/geometry/single.hpp"
+#include "nano_geo_matrix/quasi_static/geometry/single.hpp"
 #define CUP_BACKEND_QUASI_STATIC
 #include "nano_geo_matrix/cup/cup.hpp"
 
