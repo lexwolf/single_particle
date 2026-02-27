@@ -21,12 +21,12 @@
 #include <iomanip>
 #include <fstream>
 #include <armadillo>
-#include "nano_geo_matrix/core/mathNN.H"
-#include "nano_geo_matrix/core/extract.H"
-#include "nano_geo_matrix/geometry/single.H"
+#include "nano_geo_matrix/core/mathNN.hpp"
+#include "nano_geo_matrix/core/extract.hpp"
+#include "nano_geo_matrix/geometry/single.hpp"
 #define CUP_BACKEND_QUASI_STATIC
-#include "nano_geo_matrix/cup/cup.H"
-#include "nano_geo_matrix/core/Zx_tools.H"
+#include "nano_geo_matrix/cup/cup.hpp"
+#include "nano_geo_matrix/core/Zx_tools.hpp"
 
 
 /*
