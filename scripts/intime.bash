@@ -18,6 +18,10 @@ show_help() {
 use_compile=false
 plot_mode="anl"
 custom_range=""
+CXX=g++
+CXXFLAGS="-Wall -I../include -I/usr/local/include -I/usr/include/eigen3"
+LDFLAGS="-L/usr/local/lib"
+LIBS="-lgsl -lgslcblas -lm -larmadillo"
 
 # Parse options
 while getopts "char:na" opt; do
@@ -42,13 +46,13 @@ mkdir -p ../img/GIF/intime
 if $use_compile; then
   echo "> Compiling selected sources..."
   # Always compile steady-state and frohlich
-  g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/steady_state.cxx -o ../bin/sts -lgsl -lgslcblas -lm -larmadillo
-  g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/frohlich.cxx -o ../bin/fro -lgsl -lgslcblas -lm -larmadillo
+  $CXX $CXXFLAGS ../src/steady_state.cxx -o ../bin/sts $LDFLAGS $LIBS
+  $CXX $CXXFLAGS ../src/frohlich.cxx -o ../bin/fro $LDFLAGS $LIBS
   # Compile time-dependent module depending on plot mode
   if [ "$plot_mode" == "num" ]; then
-    g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/num_time.cxx -o ../bin/num -lgsl -lgslcblas -lm -larmadillo
+    $CXX $CXXFLAGS ../src/num_time.cxx -o ../bin/num $LDFLAGS $LIBS
   elif [ "$plot_mode" == "anl" ]; then
-    g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/anl_time.cxx -o ../bin/anl -lgsl -lgslcblas -lm -larmadillo
+    $CXX $CXXFLAGS ../src/anl_time.cxx -o ../bin/anl $LDFLAGS $LIBS
   else
     echo "Warning: No time-dependency mode selected. Skipping time-code compilation."
   fi

@@ -14,6 +14,10 @@ show_help() {
 # Defaults
 use_compile=false
 custom_range=""
+CXX=g++
+CXXFLAGS="-Wall -I../include -I/usr/local/include -I/usr/include/eigen3"
+LDFLAGS="-L/usr/local/lib"
+LIBS="-lgsl -lgslcblas -lm -larmadillo"
 
 # Parse options
 while getopts "chr:" opt; do
@@ -34,9 +38,9 @@ fi
 # Compile the codes if requested
 if $use_compile; then
   echo "> Compiling codes..."
-  g++ -Wall -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/frohlich.cxx -o ../bin/sfr -lgsl -lgslcblas -lm -larmadillo
-  g++ -Wall -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/ome_al_p3.cxx -o ../bin/oap -lgsl -lgslcblas -lm -larmadillo
-  g++ -Wall -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/omeG_p3.cxx -o ../bin/oGp -lgsl -lgslcblas -lm -larmadillo
+  $CXX $CXXFLAGS ../src/frohlich.cxx -o ../bin/sfr $LDFLAGS $LIBS
+  $CXX $CXXFLAGS ../src/ome_al_p3.cxx -o ../bin/oap $LDFLAGS $LIBS
+  $CXX $CXXFLAGS ../src/omeG_p3.cxx -o ../bin/oGp $LDFLAGS $LIBS
   echo "> ...Done!"
 fi
 
