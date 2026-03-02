@@ -21,16 +21,16 @@
 #include <iomanip>
 #include <fstream>
 #include <armadillo>
-#include "headers/mathNN.H"
-#include "headers/extract.H"
-#include "headers/single.H"
+#include "nano_geo_matrix/core/mathNN.hpp"
+#include "nano_geo_matrix/core/extract.hpp"
+#include "nano_geo_matrix/quasi_static/geometry/single.hpp"
 #define CUP_BACKEND_QUASI_STATIC
-#include "headers/cup.H"
-#include "headers/Zx_tools.H"
+#include "nano_geo_matrix/cup/cup.hpp"
+#include "nano_geo_matrix/core/Zx_tools.hpp"
 
 
 /*
-g++ -Wall -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/ome_al_p3.cxx -o ../bin/oap -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -Iinclude -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/ome_al_p3.cxx -o ../bin/oap -lgsl -lgslcblas -lm -larmadillo
 */
         
 using namespace std;

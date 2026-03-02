@@ -22,12 +22,12 @@
 #include <fstream>
 #include <armadillo>
 #include <string>
-#include "../src/headers/math33.H"
-#include "../src/headers/single.H"
-#include "../src/headers/cup.H"
+#include "nano_geo_matrix/core/mathNN.hpp"
+#include "nano_geo_matrix/quasi_static/geometry/single.hpp"
+#include "nano_geo_matrix/cup/cup.hpp"
 
 /*
-g++ -Wall -I/usr/include/ -L/usr/local/lib time_behavior_Q.cxx -o timQ -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -DCUP_BACKEND_QUASI_STATIC -I../include -I/usr/include/ -L/usr/local/lib time_behavior_Q.cxx -o time_behavior_Q -lgsl -lgslcblas -lm -larmadillo
 */
 
 using namespace std;
