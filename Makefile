@@ -1,5 +1,6 @@
 CC = g++
-CXXFLAGS += -Iinclude
+PROJECT_ROOT := $(abspath .)
+CXXFLAGS += -I$(PROJECT_ROOT)/extern/nano_geo_matrix/include
 CFLAGS = -Wall -I/usr/include/ -I/usr/include/eigen3 -I/usr/include/eigen3 -L/usr/local/lib
 LIBS = -lgsl -lgslcblas -lm -larmadillo
 
