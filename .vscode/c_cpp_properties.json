@@ -3,7 +3,7 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/include",
+                "${workspaceFolder}/extern/nano_geo_matrix/include",
                 "${default}",
                 "/usr/include/eigen3"
             ],
