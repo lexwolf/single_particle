@@ -28,7 +28,7 @@
 
 
 /*
-g++ -Wall -Iextern/nano_geo_matrix/include -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/anl_time.cxx -o ../bin/anl -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -I../extern/nano_geo_matrix/include -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/anl_time.cxx -o ../bin/anl -lgsl -lgslcblas -lm -larmadillo
 */
 
 using namespace std;

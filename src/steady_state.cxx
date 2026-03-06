@@ -28,7 +28,7 @@
 
 
 /*
-g++ -Wall -Iextern/nano_geo_matrix/include -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/steady_state.cxx -o ../bin/sts -lgsl -lgslcblas -lm -larmadillo
+g++ -Wall -I../extern/nano_geo_matrix/include -DNGM_DATA_DIR=\"../extern/nano_geo_matrix/data\" -I/usr/local/include -I/usr/include/eigen3 -L/usr/local/lib ../src/steady_state.cxx -o ../bin/sts -lgsl -lgslcblas -lm -larmadillo
 */
 
 using namespace std;
