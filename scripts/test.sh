@@ -15,7 +15,7 @@ OUT_DIR="$ROOT_DIR/data/output"
 IMG_DIR="$ROOT_DIR/img"
 SCRIPTS_DIR="$ROOT_DIR/scripts"
 CXX=g++
-CXXFLAGS="-Wall -I$ROOT_DIR/extern/nano_geo_matrix/include -I/usr/local/include -I/usr/include/eigen3"
+CXXFLAGS="-Wall -I$ROOT_DIR/extern/nano_geo_matrix/include -I$ROOT_DIR/extern/nano_geo_matrix/modules -I/usr/local/include -I/usr/include/eigen3"
 LDFLAGS="-L/usr/local/lib"
 LIBS="-lgsl -lgslcblas -lm -larmadillo"
 

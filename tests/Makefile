@@ -1,6 +1,6 @@
 CXX = g++
 PROJECT_ROOT := $(abspath ..)
-CPPFLAGS = -I$(PROJECT_ROOT)/extern/nano_geo_matrix/include -I/usr/include/ -I/usr/include/eigen3 -DCUP_BACKEND_QUASI_STATIC
+CPPFLAGS = -I$(PROJECT_ROOT)/extern/nano_geo_matrix/include -I$(PROJECT_ROOT)/extern/nano_geo_matrix/modules -I/usr/include/ -I/usr/include/eigen3 -DCUP_BACKEND_QUASI_STATIC
 CXXFLAGS = -Wall
 LDFLAGS = -L/usr/local/lib
 LIBS = -lgsl -lgslcblas -lm -larmadillo

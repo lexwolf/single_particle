@@ -4,9 +4,18 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/extern/nano_geo_matrix/include",
+                "${workspaceFolder}/extern/nano_geo_matrix/modules",
                 "${default}",
                 "/usr/include/eigen3"
             ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/extern/nano_geo_matrix/include",
+                    "${workspaceFolder}/extern/nano_geo_matrix/modules",
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
             "defines": ["CUP_BACKEND_QUASI_STATIC"],
             "cStandard": "c17",
             "cppStandard": "gnu++17",
