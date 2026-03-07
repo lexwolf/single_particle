@@ -44,7 +44,3 @@ tests/time_behavior
 tests/time_behavior_Q
 tests/steady_state
 tests/threshold
-tests/tim
-tests/timQ
-tests/sts
-tests/trs
