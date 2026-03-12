@@ -29,7 +29,17 @@
 #include <nano_geo_matrix/core/extract.hpp>
 
 /*
-g++ -Wall -I../extern/nano_geo_matrix/include -I../extern/nano_geo_matrix/modules -I/usr/include/ -I/usr/include/eigen3 -L/usr/local/lib ../src/omeG_p3.cxx -o ../bin/oGp -lgsl -lgslcblas -lm -larmadillo
+Example compilation:
+
+NGM_ROOT=$(realpath ../extern/nano_geo_matrix)
+
+g++ -Wall \
+  -I"$NGM_ROOT/include" \
+  -I"$NGM_ROOT/modules" \
+  -I/usr/include/ \
+  -I/usr/include/eigen3 \
+  -L/usr/local/lib \
+  ../src/omeG_p3.cxx -o ../bin/oGp -lgsl -lgslcblas -lm -larmadillo
 */
 
 using namespace std;

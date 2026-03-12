@@ -9,7 +9,8 @@ export LC_NUMERIC="en_US.UTF-8"
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 cd "$script_dir" || exit 1
 CXX=g++
-CXXFLAGS="-Wall -I../extern/nano_geo_matrix/include -I../extern/nano_geo_matrix/modules -I/usr/local/include -I/usr/include/eigen3"
+NGM_ROOT="$(realpath ../extern/nano_geo_matrix)"
+CXXFLAGS="-Wall -I$NGM_ROOT/include -I$NGM_ROOT/modules -I/usr/local/include -I/usr/include/eigen3"
 LDFLAGS="-L/usr/local/lib"
 LIBS="-lgsl -lgslcblas -lm -larmadillo"
 

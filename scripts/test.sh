@@ -14,8 +14,9 @@ BIN_DIR="$ROOT_DIR/bin"
 OUT_DIR="$ROOT_DIR/data/output"
 IMG_DIR="$ROOT_DIR/img"
 SCRIPTS_DIR="$ROOT_DIR/scripts"
+NGM_ROOT="$(realpath "$ROOT_DIR/extern/nano_geo_matrix")"
 CXX=g++
-CXXFLAGS="-Wall -I$ROOT_DIR/extern/nano_geo_matrix/include -I$ROOT_DIR/extern/nano_geo_matrix/modules -I/usr/local/include -I/usr/include/eigen3"
+CXXFLAGS="-Wall -I$NGM_ROOT/include -I$NGM_ROOT/modules -I/usr/local/include -I/usr/include/eigen3"
 LDFLAGS="-L/usr/local/lib"
 LIBS="-lgsl -lgslcblas -lm -larmadillo"
 

@@ -1,10 +1,11 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "Linux-CUP-QuasiStatic",
             "includePath": [
                 "${workspaceFolder}/extern/nano_geo_matrix/include",
                 "${workspaceFolder}/extern/nano_geo_matrix/modules",
+                "${workspaceFolder}/extern/nano_geo_matrix/modules/cup",
                 "${default}",
                 "/usr/include/eigen3"
             ],
@@ -12,11 +13,43 @@
                 "path": [
                     "${workspaceFolder}/extern/nano_geo_matrix/include",
                     "${workspaceFolder}/extern/nano_geo_matrix/modules",
+                    "${workspaceFolder}/extern/nano_geo_matrix/modules/cup",
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true
             },
-            "defines": ["CUP_BACKEND_QUASI_STATIC"],
+            "forcedInclude": [
+                "${workspaceFolder}/.vscode/cup_intellisense_qs.hpp"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "compilerPath": "/usr/bin/g++",
+            "compilerArgs": [
+                "-DUSE_MYBESSEL"
+            ]
+        },
+        {
+            "name": "Linux-CUP-MIE",
+            "includePath": [
+                "${workspaceFolder}/extern/nano_geo_matrix/include",
+                "${workspaceFolder}/extern/nano_geo_matrix/modules",
+                "${workspaceFolder}/extern/nano_geo_matrix/modules/cup",
+                "${default}",
+                "/usr/include/eigen3"
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/extern/nano_geo_matrix/include",
+                    "${workspaceFolder}/extern/nano_geo_matrix/modules",
+                    "${workspaceFolder}/extern/nano_geo_matrix/modules/cup",
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "forcedInclude": [
+                "${workspaceFolder}/.vscode/cup_intellisense_mie.hpp"
+            ],
             "cStandard": "c17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64",

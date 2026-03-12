@@ -19,7 +19,8 @@ use_compile=false
 plot_mode="anl"
 custom_range=""
 CXX=g++
-CXXFLAGS="-Wall -I../extern/nano_geo_matrix/include -I../extern/nano_geo_matrix/modules -I/usr/local/include -I/usr/include/eigen3"
+NGM_ROOT="$(realpath ../extern/nano_geo_matrix)"
+CXXFLAGS="-Wall -I$NGM_ROOT/include -I$NGM_ROOT/modules -I/usr/local/include -I/usr/include/eigen3"
 LDFLAGS="-L/usr/local/lib"
 LIBS="-lgsl -lgslcblas -lm -larmadillo"
 
