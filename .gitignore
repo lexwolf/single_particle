@@ -44,3 +44,9 @@ tests/time_behavior
 tests/time_behavior_Q
 tests/steady_state
 tests/threshold
+
+# Local build artifacts
+build/
+
+# KDE/Dolphin metadata
+.directory
