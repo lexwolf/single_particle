@@ -1,4 +1,4 @@
-set terminal pngcairo enhanced color size 2700,480 font "Arial,20"
+set terminal pngcairo enhanced color size 2700,480 font "Arial,20" transparent
 
 repo = (system("test -d data/output/alpha_panels; echo $?") eq "0") ? "." : ".."
 set output repo."/img/alpha_panels.png"
